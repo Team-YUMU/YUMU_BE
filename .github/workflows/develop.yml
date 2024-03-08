@@ -8,6 +8,7 @@ on:
 # 본인이 설정한 값을 여기서 채워넣습니다.
 # 리전, 버킷 이름, CodeDeploy 앱 이름, CodeDeploy 배포 그룹 이름
 env:
+  working-directory: ./yumu_be
   AWS_REGION: ap-northeast-2
   S3_BUCKET_NAME: yumu-bucket
   CODE_DEPLOY_APPLICATION_NAME: yumu-codeDeploy
@@ -36,6 +37,7 @@ jobs:
 
     - name: Setup Gradle's permission
       run: chmod +x gradlew
+      working-directory: ${{ env.working-directory }}
 
     # (3) Gradle build (Test 제외)
     - name: Build with Gradle
