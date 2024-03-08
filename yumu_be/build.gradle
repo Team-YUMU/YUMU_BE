@@ -38,3 +38,8 @@ tasks.named('bootBuildImage') {
 tasks.named('test') {
     useJUnitPlatform()
 }
+
+//CICD 설정
+jar {
+    enabled = false
+}
