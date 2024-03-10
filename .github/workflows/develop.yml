@@ -11,8 +11,8 @@ env:
   working-directory: ./yumu_be
   AWS_REGION: ap-northeast-2
   S3_BUCKET_NAME: yumu-bucket
-  CODE_DEPLOY_APPLICATION_NAME: yumu-codeDeploy
-  CODE_DEPLOY_DEPLOYMENT_GROUP_NAME: yumu-codeDeploy-group
+  CODE_DEPLOY_APPLICATION_NAME: yumu-app
+  CODE_DEPLOY_DEPLOYMENT_GROUP_NAME: yumu-deploy-group
 
 permissions:
   contents: read
