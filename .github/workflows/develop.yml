@@ -9,7 +9,7 @@ on:
 # 리전, 버킷 이름, CodeDeploy 앱 이름, CodeDeploy 배포 그룹 이름
 env:
   working-directory: ./yumu_be
-  RESOURCE_PATH: ./src/main/resources/application.properties
+  RESOURCE_PATH: ./yumu_be/src/main/resources/application.properties
   PROJECT_NAME: yumu-project
   AWS_REGION: ap-northeast-2
   S3_BUCKET_NAME: yumu-bucket
