@@ -38,7 +38,7 @@ jobs:
         java-version: '17'
 
     - name: Adding db secret
-      run: echo "$DB_PASSWORD" > ${{ env.RESOURCE_PATH }}
+      run: echo "$DB_PASSWORD" >> ${{ env.RESOURCE_PATH }}
       shell: bash
       env:
         spring.datasource.password: ${{ secrets.DB_PASSWORD }}
