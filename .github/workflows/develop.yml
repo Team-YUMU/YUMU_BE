@@ -40,6 +40,7 @@ jobs:
     - name: Set MySQL
       uses: samin/mysql-action@v1
       with:
+        mysql database: 'yumu_db'
         mysql user: 'admin'
         mysql password: ${{ secrets.DB_PASSWORD }}
 
