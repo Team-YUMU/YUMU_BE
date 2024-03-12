@@ -4,3 +4,16 @@ spring:
     url: jdbc:mysql://yumu-db.cae195iepgm5.ap-northeast-2.rds.amazonaws.com:3306/?useSSL=false&useUnicode=true&allowPublicKeyRetrieval=true&serverTimezone=Asia/Seoul
     username: admin
     password: ${DB_PASSWORD}
+
+springdoc:
+  packages-to-scan: com.yumu.yumu_be
+  default-consumes-media-type: application/json;charset=UTF-8
+  default-produces-media-type: application/json;charset=UTF-8
+  swagger-ui:
+    tags-sorter: alpha            # alpha: 알파벳 순 태그 정렬, method: HTTP Method 순 정렬
+    operations-sorter: alpha      # alpha: 알파벳 순 태그 정렬, method: HTTP Method 순 정렬
+  api-docs:
+    groups:
+      enabled: true
+    cache:
+      disabled: true
