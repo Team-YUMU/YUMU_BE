@@ -8,6 +8,7 @@ import java.time.LocalDateTime;
 
 @Getter
 public class AuctionDto {
+    private int id;
     private String artName;
     private String artImage;
     private String artist;
@@ -15,7 +16,8 @@ public class AuctionDto {
     private LocalDateTime createdAt;
     private int wishCnt;
 
-    public AuctionDto(String artName, String artImage, String artist, String status, LocalDateTime createdAt, int wishCnt) {
+    public AuctionDto(int id, String artName, String artImage, String artist, String status, LocalDateTime createdAt, int wishCnt) {
+        this.id = id;
         this.artName = artName;
         this.artImage = artImage;
         this.artist = artist;
@@ -25,6 +27,6 @@ public class AuctionDto {
     }
 
     public static AuctionDto of(Art art) {
-        return new AuctionDto(art.getArtName(), art.getArtImage(), art.getArtist(), Status.of(art.getStatus()), art.getCreatedAt(), art.getWishCnt());
+        return new AuctionDto(art.getId(), art.getArtName(), art.getArtImage(), art.getArtist(), Status.of(art.getStatus()), art.getCreatedAt(), art.getWishCnt());
     }
 }
