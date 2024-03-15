@@ -23,6 +23,9 @@ public class Art {
     @JoinColumn(name = "auction_id", referencedColumnName = "auction_id")
     private Auction auction;
 
+    public Art() {
+    }
+
     public Art(String artName, String artImage, String artist, Auction auction) {
         this.artName = artName;
         this.artImage = artImage;

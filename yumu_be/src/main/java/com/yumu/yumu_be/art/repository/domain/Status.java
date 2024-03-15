@@ -11,4 +11,8 @@ public enum Status {
     Status(String status) {
         this.status = status;
     }
+
+    public static String of(Status status) {
+        return status.name();
+    }
 }

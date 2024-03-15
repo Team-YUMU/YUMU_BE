@@ -6,10 +6,7 @@ import com.yumu.yumu_be.auction.controller.response.CommonResponse;
 import org.springframework.http.ResponseEntity;
 //import org.springframework.security.core.annotation.AuthenticationPrincipal;
 //import org.springframework.security.core.userdetails.User;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/api/v1/auction")
@@ -38,8 +35,16 @@ public class AuctionController implements AuctionApiSpec{
     }
 
     @Override
-    public ResponseEntity<?> find() {
-        return null;
+    @GetMapping(value = "/paging")
+    public ResponseEntity<?> find(@RequestParam(value = "page", required = false) int page,
+                                  @RequestParam(value = "size", required = false) int size,
+                                  @RequestParam(value = "sort", required = false) String sort,
+                                  @RequestParam(value = "keyword",required = false) String keyWord) {
+        try {
+            return ResponseEntity.ok(auctionService.find(page, size, sort, keyWord));
+        } catch (Exception e) {
+            return ResponseEntity.internalServerError().body(e.getMessage());
+        }
     }
 
     @Override

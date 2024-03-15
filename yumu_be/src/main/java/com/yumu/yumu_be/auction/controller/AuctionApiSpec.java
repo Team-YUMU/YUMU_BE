@@ -13,7 +13,7 @@ public interface AuctionApiSpec {
     @Operation(summary = "경매글 수정", description = "경매글 수정 API")
     ResponseEntity<?> update();
     @Operation(summary = "경매글 조회", description = "경매글 조회 API")
-    ResponseEntity<?> find();
+    ResponseEntity<?> find(int page, int size, String sort, String keyWord);
 //    @Operation(summary = "최근 경매글 조회", description = "경매글 최신순 조회 API")
 //    ResponseEntity<?> findByLatest();
 //    @Operation(summary = "인기 경매글 조회", description = "경매글 인기순 조회 API")
