@@ -1,11 +1,35 @@
 package com.yumu.yumu_be.auction.controller;
 
+import com.yumu.yumu_be.auction.controller.request.AuctionRequest;
+import com.yumu.yumu_be.auction.service.AuctionService;
+import com.yumu.yumu_be.auction.controller.response.CommonResponse;
 import org.springframework.http.ResponseEntity;
+//import org.springframework.security.core.annotation.AuthenticationPrincipal;
+//import org.springframework.security.core.userdetails.User;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
+@RestController
+@RequestMapping("/api/v1/auction")
 public class AuctionController implements AuctionApiSpec{
+
+    private final AuctionService auctionService;
+
+    public AuctionController(AuctionService auctionService) {
+        this.auctionService = auctionService;
+    }
+
     @Override
-    public ResponseEntity<?> create() {
-        return null;
+    @PostMapping
+    public ResponseEntity<CommonResponse> create(String memberId, @RequestBody AuctionRequest request) {
+        try {
+            auctionService.create("testUser", request);
+            return ResponseEntity.ok(CommonResponse.of(true, null));
+        } catch (Exception e) {
+            return ResponseEntity.ok(CommonResponse.of(false, e.getMessage()));
+        }
     }
 
     @Override

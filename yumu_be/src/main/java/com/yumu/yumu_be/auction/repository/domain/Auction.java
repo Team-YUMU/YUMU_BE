@@ -1,6 +1,6 @@
 package com.yumu.yumu_be.auction.repository.domain;
 
-import com.yumu.yumu_be.common.Receive;
+import com.yumu.yumu_be.art.repository.domain.Art;
 import jakarta.persistence.*;
 import lombok.Getter;
 
@@ -24,6 +24,8 @@ public class Auction {
     private String winningBidder;
     private String notice;
     private Receive receiveType;
+    @OneToOne(mappedBy = "auction", cascade = CascadeType.ALL, orphanRemoval = true)
+    private Art art;
 
     public Auction() {
     }
@@ -40,7 +42,11 @@ public class Auction {
         this.receiveType = receiveType;
     }
 
-    public static Auction of(String artDescription, String artSize, LocalDateTime artCreatedDate, LocalDateTime auctionStartDate, LocalDateTime auctionEndDate, int defaultBid, String notice, Receive receiveType) {
-        return new Auction(artDescription, artSize, artCreatedDate, auctionStartDate, auctionEndDate, defaultBid, notice, receiveType);
+    public static Auction of(String artDescription, String artSize, LocalDateTime artCreatedDate, LocalDateTime auctionStartDate, LocalDateTime auctionEndDate, int defaultBid, String notice, String receiveType) {
+        return new Auction(artDescription, artSize, artCreatedDate, auctionStartDate, auctionEndDate, defaultBid, notice, Receive.of(receiveType));
+    }
+
+    public void addArt(Art art) {
+        this.art = art;
     }
 }
