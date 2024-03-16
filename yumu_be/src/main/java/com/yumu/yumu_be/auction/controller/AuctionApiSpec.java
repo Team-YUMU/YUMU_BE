@@ -4,12 +4,13 @@ import com.yumu.yumu_be.auction.controller.request.AuctionRequest;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.multipart.MultipartFile;
 //import org.springframework.security.core.userdetails.User;
 
 @Tag(name = "Auction", description = "경매글")
 public interface AuctionApiSpec {
     @Operation(summary = "경매글 등록", description = "경매글 등록 API")
-    ResponseEntity<?> create(String memberId, AuctionRequest request);
+    ResponseEntity<?> create(String memberId, AuctionRequest request, MultipartFile multipartFile);
     @Operation(summary = "경매글 수정", description = "경매글 수정 API")
     ResponseEntity<?> update();
     @Operation(summary = "경매글 조회", description = "경매글 조회 API")

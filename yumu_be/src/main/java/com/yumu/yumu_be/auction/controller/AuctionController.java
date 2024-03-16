@@ -8,6 +8,9 @@ import org.springframework.http.ResponseEntity;
 //import org.springframework.security.core.annotation.AuthenticationPrincipal;
 //import org.springframework.security.core.userdetails.User;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
+
+import java.io.IOException;
 
 @RestController
 @RequestMapping("/api/v1/auction")
@@ -21,9 +24,9 @@ public class AuctionController implements AuctionApiSpec{
 
     @Override
     @PostMapping
-    public ResponseEntity<CommonResponse> create(String memberId, @RequestBody AuctionRequest request) {
+    public ResponseEntity<CommonResponse> create(String memberId, @RequestPart("request") AuctionRequest request, @RequestPart("image") MultipartFile multipartFile) {
         try {
-            auctionService.create("testUser", request);
+            auctionService.create("testUser", request, multipartFile);
             return ResponseEntity.ok(CommonResponse.of(true, null));
         } catch (Exception e) {
             return ResponseEntity.ok(CommonResponse.of(false, e.getMessage()));
