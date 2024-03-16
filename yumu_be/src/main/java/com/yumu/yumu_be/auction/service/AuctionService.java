@@ -68,6 +68,8 @@ public class AuctionService {
     @Transactional
     public void delete(int id) {
         Auction auction = auctionRepository.findById(id).orElseThrow(AuctionNotFoundException::new);
+        String imageUrl = auction.getArt().getArtImage();
         auctionRepository.deleteById(id);
+        s3Service.deleteFile(imageUrl);
     }
 }
