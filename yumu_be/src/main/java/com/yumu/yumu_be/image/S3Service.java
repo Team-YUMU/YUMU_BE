@@ -28,10 +28,10 @@ public class S3Service {
         this.bucket = bucket;
     }
 
-    public String upload(MultipartFile multipartFile, String artId) throws IOException {
+    public String upload(MultipartFile multipartFile, String memberId) throws IOException {
         String originalFileName = multipartFile.getOriginalFilename();
 
-        String uniqueFileName = artId+"/"+originalFileName;
+        String uniqueFileName = memberId+"/"+originalFileName;
         File uploadFile = convert(multipartFile);
 
         String uploadImageUrl = putS3(uploadFile, uniqueFileName);
@@ -79,10 +79,10 @@ public class S3Service {
         }
     }
 
-    public String updateFile(MultipartFile newFile, String oldFileName, String dirName) throws IOException {
+    public String updateFile(MultipartFile newFile, String oldFileName, String memberId) throws IOException {
         log.info("S3 oldFileName: " + oldFileName);
         deleteFile(oldFileName);
-        return upload(newFile, dirName);
+        return upload(newFile, memberId);
     }
 
 }
