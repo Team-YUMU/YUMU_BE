@@ -24,7 +24,7 @@ public class AuctionController implements AuctionApiSpec{
 
     @Override
     @PostMapping
-    public ResponseEntity<CommonResponse> create(String memberId, @RequestPart("request") AuctionRequest request, @RequestPart("image") MultipartFile multipartFile) {
+    public ResponseEntity<CommonResponse> create(@RequestPart("request") AuctionRequest request, @RequestPart("image") MultipartFile multipartFile) {
         try {
             auctionService.create("testUser", request, multipartFile);
             return ResponseEntity.ok(CommonResponse.of(true, null));
@@ -34,7 +34,8 @@ public class AuctionController implements AuctionApiSpec{
     }
 
     @Override
-    public ResponseEntity<?> update() {
+    @PutMapping("/{id}")
+    public ResponseEntity<CommonResponse> update() {
         return null;
     }
 
