@@ -19,5 +19,5 @@ public interface AuctionApiSpec {
 //    @Operation(summary = "인기 경매글 조회", description = "경매글 인기순 조회 API")
 //    ResponseEntity<?> findByPopular();
     @Operation(summary = "경매글 삭제", description = "경매글 삭제 API")
-    ResponseEntity<?> delete();
+    ResponseEntity<?> delete(int id);
 }

@@ -5,6 +5,7 @@ import com.yumu.yumu_be.art.repository.domain.Art;
 import com.yumu.yumu_be.auction.controller.request.AuctionRequest;
 import com.yumu.yumu_be.auction.controller.response.AuctionDto;
 import com.yumu.yumu_be.auction.controller.response.AuctionResponse;
+import com.yumu.yumu_be.auction.exception.AuctionNotFoundException;
 import com.yumu.yumu_be.auction.repository.AuctionRepository;
 import com.yumu.yumu_be.auction.repository.domain.Auction;
 import org.springframework.data.domain.Page;
@@ -56,5 +57,11 @@ public class AuctionService {
         return AuctionResponse.of(findByKeyword.getNumber(),findByKeyword.getTotalElements(),findByKeyword.getTotalPages(),findByKeyword.stream()
                 .map(AuctionDto::of)
                 .collect(Collectors.toList()));
+    }
+
+    @Transactional
+    public void delete(int id) {
+        Auction auction = auctionRepository.findById(id).orElseThrow(AuctionNotFoundException::new);
+        auctionRepository.deleteById(id);
     }
 }

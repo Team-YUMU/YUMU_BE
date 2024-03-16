@@ -49,7 +49,13 @@ public class AuctionController implements AuctionApiSpec{
     }
 
     @Override
-    public ResponseEntity<?> delete() {
-        return null;
+    @DeleteMapping("/{id}")
+    public ResponseEntity<CommonResponse> delete(@PathVariable int id) {
+        try {
+            auctionService.delete(id);
+            return ResponseEntity.ok(CommonResponse.of(true, null));
+        } catch (Exception e) {
+            return ResponseEntity.internalServerError().build();
+        }
     }
 }
