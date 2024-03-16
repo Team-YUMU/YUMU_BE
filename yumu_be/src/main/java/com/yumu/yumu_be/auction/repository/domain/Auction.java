@@ -49,4 +49,16 @@ public class Auction {
     public void addArt(Art art) {
         this.art = art;
     }
+
+    public void updateTo(String artDescription, String artSize, LocalDateTime artCreatedDate, LocalDateTime auctionStartDate, LocalDateTime auctionEndDate, int defaultBid, String notice, String receiveType) {
+        this.artDescription = artDescription;
+        this.artSize = artSize;
+        this.artCreatedDate = artCreatedDate;
+        this.auctionStartDate = auctionStartDate;
+        this.auctionEndDate = auctionEndDate;
+        this.defaultBid = defaultBid;
+        this.winningBid = 0;
+        this.notice = notice;
+        this.receiveType = Receive.of(receiveType);
+    }
 }

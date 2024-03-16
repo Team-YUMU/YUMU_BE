@@ -41,4 +41,12 @@ public class Art {
         auction.addArt(art);
         return art;
     }
+
+    public void updateTo(String artName, String artImage, String artist, Auction auction) {
+        this.artName = artName;
+        this.artImage = artImage;
+        this.artist = artist;
+        this.auction = auction;
+        auction.addArt(this);
+    }
 }

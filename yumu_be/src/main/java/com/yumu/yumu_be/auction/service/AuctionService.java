@@ -72,4 +72,13 @@ public class AuctionService {
         auctionRepository.deleteById(id);
         s3Service.deleteFile(imageUrl);
     }
+
+    @Transactional
+    public void update(int id, String memberId, AuctionRequest request, MultipartFile multipartFile) throws IOException {
+        Auction auction = auctionRepository.findById(id).orElseThrow(AuctionNotFoundException::new);
+        String ordImageUrl = auction.getArt().getArtImage();
+        String newImageUrl = s3Service.updateFile(multipartFile, ordImageUrl, memberId);
+        auction.updateTo(request.getArtDescription(),request.getArtSize(),request.getArtCreatedDate(), request.getAuctionStartDate(), request.getAuctionEndDate(), request.getDefaultBid(), request.getNotice(), request.getReceiveType());
+        auction.getArt().updateTo(request.getArtName(), newImageUrl, memberId, auction);
+    }
 }

@@ -35,8 +35,13 @@ public class AuctionController implements AuctionApiSpec{
 
     @Override
     @PutMapping("/{id}")
-    public ResponseEntity<CommonResponse> update() {
-        return null;
+    public ResponseEntity<CommonResponse> update(@PathVariable int id, @RequestPart("request") AuctionRequest request, @RequestPart("image") MultipartFile multipartFile) {
+        try {
+            auctionService.update(id,"testUser", request, multipartFile);
+            return ResponseEntity.ok(CommonResponse.of(true, null));
+        } catch (Exception e) {
+            return ResponseEntity.ok(CommonResponse.of(false, e.getMessage()));
+        }
     }
 
     @Override
