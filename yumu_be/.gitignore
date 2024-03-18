@@ -226,4 +226,4 @@ gradle-app.setting
 *.pem
 
 # 개발용
-application-dev.yml
+/src/main/resources/application-local.yml
