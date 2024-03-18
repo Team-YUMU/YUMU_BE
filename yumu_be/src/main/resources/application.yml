@@ -5,6 +5,28 @@ spring:
     username: admin
     password: ${DB_PASSWORD}
 
+  jpa:
+    database: mysql
+    hibernate:
+      ddl-auto: validate
+    show-sql: true
+    properties:
+      hibernate:
+        format_sql: true
+
+  config:
+    activate:
+      on-profile: prod
+
+  jwt:
+    secret:
+      key: ${JWT_KEY}
+
+  data:
+    redis:
+      host: 43.200.219.117
+      port: 6379
+
 springdoc:
   packages-to-scan: com.yumu.yumu_be
   default-consumes-media-type: application/json;charset=UTF-8
