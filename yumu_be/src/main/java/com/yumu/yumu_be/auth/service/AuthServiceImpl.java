@@ -33,9 +33,14 @@ public class AuthServiceImpl implements AuthService{
         String nickname = signupRequst.getNickname();
         String email = signupRequst.getEmail();
         String password = signupRequst.getPassword();
+        String checkPassword = signupRequst.getCheckPassword();
 
         isExistNickname(nickname);  // 중복 체크
         isExistEmail(email);
+
+        if (!password.equals(checkPassword)) {
+            throw new Exception("비밀번호 일치하지 않음");
+        }
 
         String encodedPassword = passwordEncoder.encode(password);  // 패스워드 암호화
 
