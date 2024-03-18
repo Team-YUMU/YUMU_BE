@@ -43,7 +43,7 @@ jobs:
         files: ${{ env.RESOURCE_PATH }}
       env:
         spring.datasource.password: ${{ secrets.DB_PASSWORD }}
-	spring.jwt.secret.key: ${{ secrets.JWT_KEY }}
+        spring.jwt.secret.key: ${{ secrets.JWT_KEY }}
 
     - name: Init Gradle
       uses: gradle/gradle-build-action@v1
