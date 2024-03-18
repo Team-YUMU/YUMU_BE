@@ -37,12 +37,13 @@ jobs:
         distribution: 'temurin'
         java-version: '17'
 
-    - name: Set MySQL
+    - name: Set MySQL & jwt
       uses: microsoft/variable-substitution@v1
       with:
         files: ${{ env.RESOURCE_PATH }}
       env:
         spring.datasource.password: ${{ secrets.DB_PASSWORD }}
+        spring.jwt.secret.key: ${{ secrets.JWT_KEY }}
 
     - name: Init Gradle
       uses: gradle/gradle-build-action@v1
