@@ -4,19 +4,19 @@ spring:
     url: jdbc:mysql://yumu-db.cae195iepgm5.ap-northeast-2.rds.amazonaws.com:3306/?useSSL=false&useUnicode=true&allowPublicKeyRetrieval=true&serverTimezone=Asia/Seoul
     username: admin
     password: ${DB_PASSWORD}
-
   jpa:
     database: mysql
+    show-sql: true #hibernate가 실행한 모든 sql 출력
     hibernate:
-      ddl-auto: create
-    show-sql: true
+      ddl-auto: update
+      dialect:
     properties:
       hibernate:
-        format_sql: true
+        format-sql: true
 
-#  config:
-#    activate:
-#      on-profile: prod
+  #  config:
+  #    activate:
+  #      on-profile: prod
 
   jwt:
     secret:
@@ -39,3 +39,15 @@ springdoc:
       enabled: true
     cache:
       disabled: true
+
+cloud:
+  aws:
+    credentials:
+      accessKey: ${IAM_ACCESS_KEY}
+      secretKey: ${IAM_SECRET_KEY}
+    region:
+      static: ap-northeast-2
+    stack:
+      auto: false
+    s3:
+      bucket: yumu-image
