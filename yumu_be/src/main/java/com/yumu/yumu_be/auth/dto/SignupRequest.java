@@ -24,4 +24,7 @@ public class SignupRequest {
     @NotBlank(message = "비밀번호는 필수 입력값입니다.")
     @PasswordCheck(message = "비밀번호 형식이 맞지 않습니다.")
     private String password;
+
+    @NotBlank
+    private String checkPassword;
 }
