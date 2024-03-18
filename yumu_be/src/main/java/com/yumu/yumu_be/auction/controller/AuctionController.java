@@ -5,8 +5,8 @@ import com.yumu.yumu_be.auction.controller.response.AuctionResponse;
 import com.yumu.yumu_be.auction.service.AuctionService;
 import com.yumu.yumu_be.auction.controller.response.CommonResponse;
 import org.springframework.http.ResponseEntity;
-//import org.springframework.security.core.annotation.AuthenticationPrincipal;
-//import org.springframework.security.core.userdetails.User;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.core.userdetails.User;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -24,9 +24,9 @@ public class AuctionController implements AuctionApiSpec{
 
     @Override
     @PostMapping
-    public ResponseEntity<CommonResponse> create(@RequestPart("request") AuctionRequest request, @RequestPart("image") MultipartFile multipartFile) {
+    public ResponseEntity<CommonResponse> create(@AuthenticationPrincipal User user, @RequestPart("request") AuctionRequest request, @RequestPart("image") MultipartFile multipartFile) {
         try {
-            auctionService.create("testUser", request, multipartFile);
+            auctionService.create(user.getUsername(), request, multipartFile);
             return ResponseEntity.ok(CommonResponse.of(true, null));
         } catch (Exception e) {
             return ResponseEntity.ok(CommonResponse.of(false, e.getMessage()));
