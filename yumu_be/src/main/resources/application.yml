@@ -9,7 +9,7 @@ spring:
     show-sql: true #hibernate가 실행한 모든 sql 출력
     hibernate:
       ddl-auto: update
-      dialect: org.hibernate.spatial.dialect.mysql.MySQL56InnoDBSpatialDialect #geo 설정
+      dialect:
     properties:
       hibernate:
         format-sql: true
