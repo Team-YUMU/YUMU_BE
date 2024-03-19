@@ -30,11 +30,12 @@ public class S3Service {
 
     public String upload(MultipartFile multipartFile, String memberId) throws IOException {
         String originalFileName = multipartFile.getOriginalFilename();
-
+        System.out.println("originalFileName : "+originalFileName);
         String uniqueFileName = memberId+"/"+originalFileName;
         File uploadFile = convert(multipartFile);
 
         String uploadImageUrl = putS3(uploadFile, uniqueFileName);
+        System.out.println("uploadImageUrl : "+uploadImageUrl);
         removeLocalFile(uploadFile);
         return uploadImageUrl;
     }

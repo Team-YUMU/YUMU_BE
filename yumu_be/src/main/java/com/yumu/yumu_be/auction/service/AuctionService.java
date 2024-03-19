@@ -34,10 +34,15 @@ public class AuctionService {
     }
     @Transactional
     public void create(String memberId, AuctionRequest request, MultipartFile multipartFile) throws IOException {
+        System.out.println("멤버 아이디 : "+memberId);
         String imageUrl = s3Service.upload(multipartFile, memberId);
+        System.out.println("imageUrl : "+imageUrl);
         Auction auction = Auction.of(request.getArtDescription(),request.getArtSize(),request.getArtCreatedDate(), request.getAuctionStartDate(), request.getAuctionEndDate(), request.getDefaultBid(), request.getNotice(), request.getReceiveType());
+        System.out.println("auction 객체 생성 pass");
         artRepository.save(Art.of(request.getArtName(), imageUrl, memberId, auction));
+        System.out.println("art 저장 pass");
         auctionRepository.save(auction);
+        System.out.println("auction 저장 pass");
     }
 
     public AuctionResponse find(int page, int size, String sort, String keyWord) {
