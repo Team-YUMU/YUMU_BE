@@ -14,9 +14,9 @@ spring:
       hibernate:
         format-sql: true
 
-  #  config:
-  #    activate:
-  #      on-profile: prod
+    config:
+      activate:
+        on-profile: prod
 
   jwt:
     secret:

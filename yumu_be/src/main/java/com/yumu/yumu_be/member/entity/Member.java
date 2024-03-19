@@ -1,5 +1,6 @@
 package com.yumu.yumu_be.member.entity;
 
+import com.yumu.yumu_be.member.dto.ProfileRequest;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
@@ -23,11 +24,11 @@ public class Member {
     @NotNull
     private String password;
 
-    private String introduce;
+    private String introduce = "";
 
-    private String snsLink;
+    private String snsLink = "";
 
-    private String address;
+    private String address = "";
 
     private String profileImage = "images/default.jpg";
 
@@ -35,5 +36,12 @@ public class Member {
         this.nickname = nickname;
         this.email = email;
         this.password = password;
+    }
+
+    public void updateProfile(ProfileRequest request, String imageUrl) {
+        this.nickname = request.getNickname();
+        this.introduce = request.getIntroduce();
+        this.snsLink = request.getSnsLink();
+        this.profileImage = imageUrl;
     }
 }
