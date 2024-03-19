@@ -26,11 +26,8 @@ public class AuctionController implements AuctionApiSpec{
     @Override
     @PostMapping
     public ResponseEntity<CommonResponse> create(@AuthenticationPrincipal UserDetails user, @RequestPart("request") AuctionRequest request, @RequestPart("image") MultipartFile multipartFile) {
-        System.out.println("멤버 id = "+user.getUsername());
         try {
-            System.out.println("생성 시작");
             auctionService.create(user.getUsername(), request, multipartFile);
-            System.out.println("최종 pass");
             return ResponseEntity.ok(CommonResponse.of(true, null));
         } catch (Exception e) {
             System.out.println("error message = "+e.getMessage());
@@ -42,7 +39,7 @@ public class AuctionController implements AuctionApiSpec{
     @PutMapping("/{id}")
     public ResponseEntity<CommonResponse> update(@AuthenticationPrincipal UserDetails user,@PathVariable int id, @RequestPart("request") AuctionRequest request, @RequestPart("image") MultipartFile multipartFile) {
         try {
-            auctionService.update(id,"testUser", request, multipartFile);
+            auctionService.update(id, user.getUsername(), request, multipartFile);
             return ResponseEntity.ok(CommonResponse.of(true, null));
         } catch (Exception e) {
             return ResponseEntity.ok(CommonResponse.of(false, e.getMessage()));
