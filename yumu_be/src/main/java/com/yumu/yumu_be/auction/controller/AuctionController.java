@@ -4,9 +4,10 @@ import com.yumu.yumu_be.auction.controller.request.AuctionRequest;
 import com.yumu.yumu_be.auction.controller.response.AuctionResponse;
 import com.yumu.yumu_be.auction.service.AuctionService;
 import com.yumu.yumu_be.auction.controller.response.CommonResponse;
+import org.springframework.http.HttpRequest;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.security.core.userdetails.User;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -24,7 +25,8 @@ public class AuctionController implements AuctionApiSpec{
 
     @Override
     @PostMapping
-    public ResponseEntity<CommonResponse> create(@AuthenticationPrincipal User user, @RequestPart("request") AuctionRequest request, @RequestPart("image") MultipartFile multipartFile) {
+    public ResponseEntity<CommonResponse> create(@AuthenticationPrincipal UserDetails user, @RequestPart("request") AuctionRequest request, @RequestPart("image") MultipartFile multipartFile) {
+        System.out.println("멤버 id = "+user.getUsername());
         try {
             auctionService.create(user.getUsername(), request, multipartFile);
             return ResponseEntity.ok(CommonResponse.of(true, null));
@@ -35,7 +37,7 @@ public class AuctionController implements AuctionApiSpec{
 
     @Override
     @PutMapping("/{id}")
-    public ResponseEntity<CommonResponse> update(@PathVariable int id, @RequestPart("request") AuctionRequest request, @RequestPart("image") MultipartFile multipartFile) {
+    public ResponseEntity<CommonResponse> update(@AuthenticationPrincipal UserDetails user,@PathVariable int id, @RequestPart("request") AuctionRequest request, @RequestPart("image") MultipartFile multipartFile) {
         try {
             auctionService.update(id,"testUser", request, multipartFile);
             return ResponseEntity.ok(CommonResponse.of(true, null));
