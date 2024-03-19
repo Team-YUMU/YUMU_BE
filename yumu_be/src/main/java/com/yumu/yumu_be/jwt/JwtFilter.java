@@ -28,7 +28,6 @@ public class JwtFilter extends OncePerRequestFilter {
             throws ServletException, IOException {
 
         String accessToken = jwtUtil.resolveToken(request);
-        System.out.println("액세스 토큰 : "+accessToken);
         //1. access token 유효할 경우
         //2. access token 유효하지 않고 refresh token 유효할 경우
         //3. access token, refresh token 유효하지 않을 경우

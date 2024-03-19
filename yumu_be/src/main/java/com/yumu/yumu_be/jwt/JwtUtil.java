@@ -53,7 +53,6 @@ public class JwtUtil {
     //헤더에서 토큰 가져옴
     public String resolveToken(HttpServletRequest request) {
         String bearerToken = request.getHeader(AUTHORIZATION_HEADER);
-        System.out.println("토큰 있는지 확인 : "+bearerToken);
         if (StringUtils.hasText(bearerToken) && bearerToken.startsWith(BEARER_PREFIX)) {
             return bearerToken.substring(7);
         }

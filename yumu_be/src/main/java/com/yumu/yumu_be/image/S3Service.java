@@ -51,8 +51,10 @@ public class S3Service {
         String originalFileName = file.getOriginalFilename();
         String uuid = UUID.randomUUID().toString();
         String uniqueFileName = uuid + "_" + originalFileName;
-
+        log.info("convert new file 생성전");
         File convertFile = new File(uniqueFileName);
+        Runtime.getRuntime().exec("chmod 777 ./"+convertFile);
+        Runtime.getRuntime().exec("chmod 777 "+convertFile);
         if (convertFile.createNewFile()) {
             try (FileOutputStream fos = new FileOutputStream(convertFile)) {
                 fos.write(file.getBytes());
