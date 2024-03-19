@@ -28,7 +28,9 @@ public class AuctionController implements AuctionApiSpec{
     public ResponseEntity<CommonResponse> create(@AuthenticationPrincipal UserDetails user, @RequestPart("request") AuctionRequest request, @RequestPart("image") MultipartFile multipartFile) {
         System.out.println("멤버 id = "+user.getUsername());
         try {
+            System.out.println("생성 시작");
             auctionService.create(user.getUsername(), request, multipartFile);
+            System.out.println("최종 pass");
             return ResponseEntity.ok(CommonResponse.of(true, null));
         } catch (Exception e) {
             return ResponseEntity.ok(CommonResponse.of(false, e.getMessage()));
