@@ -23,17 +23,25 @@ public class S3Service {
 
     private final String bucket;
 
-    public S3Service(AmazonS3 amazonS3, @Value("${cloud.aws.s3.bucket}") String bucket) {
+    private final String accessKey;
+    private final String secretKey;
+
+    public S3Service(AmazonS3 amazonS3, @Value("${cloud.aws.s3.bucket}") String bucket, @Value("${cloud.aws.credentials.accessKey}") String accessKey, @Value("${cloud.aws.credentials.secretKey}") String secretKey) {
         this.amazonS3 = amazonS3;
         this.bucket = bucket;
+        this.accessKey = accessKey;
+        this.secretKey = secretKey;
     }
 
     public String upload(MultipartFile multipartFile, String memberId) throws IOException {
         String originalFileName = multipartFile.getOriginalFilename();
         System.out.println("originalFileName : "+originalFileName);
         String uniqueFileName = memberId+"/"+originalFileName;
+        System.out.println("convert 전");
         File uploadFile = convert(multipartFile);
-
+        System.out.println("convert 후");
+        System.out.println("iam accessKey = "+accessKey);
+        System.out.println("iam secretKey = "+secretKey);
         String uploadImageUrl = putS3(uploadFile, uniqueFileName);
         System.out.println("uploadImageUrl : "+uploadImageUrl);
         removeLocalFile(uploadFile);
@@ -58,8 +66,10 @@ public class S3Service {
     }
 
     private String putS3(File uploadFile, String fileName) {
+        System.out.println("이미지 저장시작");
         amazonS3.putObject(new PutObjectRequest(bucket, fileName, uploadFile)
                 .withCannedAcl(CannedAccessControlList.PublicRead));
+        System.out.println("이미지 저장완료");
         return amazonS3.getUrl(bucket, fileName).toString();
     }
     private void removeLocalFile(File targetFile) {

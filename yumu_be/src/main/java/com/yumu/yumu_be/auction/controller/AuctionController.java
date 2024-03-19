@@ -33,6 +33,7 @@ public class AuctionController implements AuctionApiSpec{
             System.out.println("최종 pass");
             return ResponseEntity.ok(CommonResponse.of(true, null));
         } catch (Exception e) {
+            System.out.println("error message = "+e.getMessage());
             return ResponseEntity.ok(CommonResponse.of(false, e.getMessage()));
         }
     }
