@@ -23,27 +23,17 @@ public class S3Service {
 
     private final String bucket;
 
-    private final String accessKey;
-    private final String secretKey;
 
-    public S3Service(AmazonS3 amazonS3, @Value("${cloud.aws.s3.bucket}") String bucket, @Value("${cloud.aws.credentials.accessKey}") String accessKey, @Value("${cloud.aws.credentials.secretKey}") String secretKey) {
+    public S3Service(AmazonS3 amazonS3, @Value("${cloud.aws.s3.bucket}") String bucket) {
         this.amazonS3 = amazonS3;
         this.bucket = bucket;
-        this.accessKey = accessKey;
-        this.secretKey = secretKey;
     }
 
     public String upload(MultipartFile multipartFile, String memberId) throws IOException {
         String originalFileName = multipartFile.getOriginalFilename();
-        System.out.println("originalFileName : "+originalFileName);
         String uniqueFileName = memberId+"/"+originalFileName;
-        System.out.println("convert 전");
         File uploadFile = convert(multipartFile);
-        System.out.println("convert 후");
-        System.out.println("iam accessKey = "+accessKey);
-        System.out.println("iam secretKey = "+secretKey);
         String uploadImageUrl = putS3(uploadFile, uniqueFileName);
-        System.out.println("uploadImageUrl : "+uploadImageUrl);
         removeLocalFile(uploadFile);
         return uploadImageUrl;
     }
@@ -51,7 +41,6 @@ public class S3Service {
         String originalFileName = file.getOriginalFilename();
         String uuid = UUID.randomUUID().toString();
         String uniqueFileName = uuid + "_" + originalFileName;
-        log.info("convert new file 생성전");
         File convertFile = new File(uniqueFileName);
         Runtime.getRuntime().exec("chmod 777 ./"+convertFile);
         Runtime.getRuntime().exec("chmod 777 "+convertFile);
@@ -68,10 +57,8 @@ public class S3Service {
     }
 
     private String putS3(File uploadFile, String fileName) {
-        System.out.println("이미지 저장시작");
         amazonS3.putObject(new PutObjectRequest(bucket, fileName, uploadFile)
                 .withCannedAcl(CannedAccessControlList.PublicRead));
-        System.out.println("이미지 저장완료");
         return amazonS3.getUrl(bucket, fileName).toString();
     }
     private void removeLocalFile(File targetFile) {
