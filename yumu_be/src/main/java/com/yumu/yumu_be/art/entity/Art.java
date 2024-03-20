@@ -1,6 +1,6 @@
-package com.yumu.yumu_be.art.repository.domain;
+package com.yumu.yumu_be.art.entity;
 
-import com.yumu.yumu_be.auction.repository.domain.Auction;
+import com.yumu.yumu_be.auction.entity.Auction;
 import jakarta.persistence.*;
 import lombok.Getter;
 

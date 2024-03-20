@@ -1,6 +1,5 @@
-package com.yumu.yumu_be.auction.controller.response;
+package com.yumu.yumu_be.auction.dto;
 
-import com.yumu.yumu_be.art.repository.domain.Art;
 import lombok.Getter;
 
 import java.util.List;

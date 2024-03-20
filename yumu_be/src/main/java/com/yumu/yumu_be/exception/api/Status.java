@@ -20,6 +20,8 @@ public enum Status {
     NOT_FOUND_MEMBER(404, "회원을 찾을 수 없습니다."),
     NOT_FOUND_ACCESS_TOKEN(404, "어세스 토큰이 존재 하지않습니다."),
     NOT_FOUND_REFRESH_TOKEN(404, "리프레시 토큰이 존재 하지않습니다."),
+    NOT_FOUND_AUCTION(404, "경매글이 존재 하지않습니다."),
+    NOT_FOUND_RECEIVE_TYPE(404, "수령방법이 존재 하지않습니다."),
 
 
     //403 Forbidden

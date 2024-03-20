@@ -43,6 +43,10 @@ public class ExceptionAdvice {
             return new RestApiException(Status.NOT_FOUND_ACCESS_TOKEN);
         } else if (e instanceof NotFoundException.NotFoundRefreshTokenException) {
             return new RestApiException(Status.NOT_FOUND_REFRESH_TOKEN);
+        }else if (e instanceof NotFoundException.NotFoundAuctionException) {
+            return new RestApiException(Status.NOT_FOUND_AUCTION);
+        }else if (e instanceof NotFoundException.NotFoundReceiveTypeException) {
+            return new RestApiException(Status.NOT_FOUND_RECEIVE_TYPE);
         }
         log.info("Not Found Error = {}", e.getMessage());
         return new RestApiException(Status.NOT_FOUND);

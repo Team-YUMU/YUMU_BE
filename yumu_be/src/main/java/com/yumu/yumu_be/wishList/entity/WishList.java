@@ -1,6 +1,6 @@
 package com.yumu.yumu_be.wishList.entity;
 
-import com.yumu.yumu_be.art.repository.domain.Art;
+import com.yumu.yumu_be.art.entity.Art;
 import com.yumu.yumu_be.member.entity.Member;
 import jakarta.persistence.*;
 import lombok.Getter;

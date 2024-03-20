@@ -1,7 +1,7 @@
 package com.yumu.yumu_be.wishList.service;
 
 import com.yumu.yumu_be.art.repository.ArtRepository;
-import com.yumu.yumu_be.art.repository.domain.Art;
+import com.yumu.yumu_be.art.entity.Art;
 import com.yumu.yumu_be.exception.NotFoundException;
 import com.yumu.yumu_be.member.entity.Member;
 import com.yumu.yumu_be.member.repository.MemberRepository;

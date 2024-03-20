@@ -1,4 +1,4 @@
-package com.yumu.yumu_be.art.repository.domain;
+package com.yumu.yumu_be.art.entity;
 
 public enum Status {
 
