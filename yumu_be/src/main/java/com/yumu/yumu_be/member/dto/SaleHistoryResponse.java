@@ -1,6 +1,6 @@
 package com.yumu.yumu_be.member.dto;
 
-import com.yumu.yumu_be.art.repository.domain.Status;
+import com.yumu.yumu_be.art.entity.Status;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;

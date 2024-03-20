@@ -1,4 +1,4 @@
-package com.yumu.yumu_be.auction.controller.response;
+package com.yumu.yumu_be.auction.dto;
 
 import lombok.Getter;
 

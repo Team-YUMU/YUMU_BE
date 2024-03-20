@@ -1,9 +1,8 @@
 package com.yumu.yumu_be.art.repository;
 
-import com.querydsl.jpa.impl.JPAQuery;
 import com.querydsl.jpa.impl.JPAQueryFactory;
-import com.yumu.yumu_be.art.repository.domain.Art;
-import com.yumu.yumu_be.art.repository.domain.QArt;
+import com.yumu.yumu_be.art.entity.Art;
+import com.yumu.yumu_be.art.entity.QArt;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;

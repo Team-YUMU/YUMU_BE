@@ -1,6 +1,6 @@
-package com.yumu.yumu_be.art.repository.domain;
+package com.yumu.yumu_be.art.entity;
 
-import com.yumu.yumu_be.auction.repository.domain.Auction;
+import com.yumu.yumu_be.auction.entity.Auction;
 import jakarta.persistence.*;
 import lombok.Getter;
 
@@ -48,5 +48,15 @@ public class Art {
         this.artist = artist;
         this.auction = auction;
         auction.addArt(this);
+    }
+
+    public void increaseWishCnt() {
+        this.wishCnt += 1;
+    }
+
+    public void decreaseWishCnt() {
+        if (this.wishCnt > 0) {
+            this.wishCnt -= 1;
+        }
     }
 }

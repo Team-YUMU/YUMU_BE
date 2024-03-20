@@ -1,6 +1,6 @@
 package com.yumu.yumu_be.member.entity;
 
-import com.yumu.yumu_be.art.repository.domain.Status;
+import com.yumu.yumu_be.art.entity.Status;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import lombok.Getter;

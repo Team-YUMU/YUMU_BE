@@ -1,7 +1,7 @@
-package com.yumu.yumu_be.auction.controller.response;
+package com.yumu.yumu_be.auction.dto;
 
-import com.yumu.yumu_be.art.repository.domain.Art;
-import com.yumu.yumu_be.art.repository.domain.Status;
+import com.yumu.yumu_be.art.entity.Art;
+import com.yumu.yumu_be.art.entity.Status;
 import lombok.Getter;
 
 import java.time.LocalDateTime;
