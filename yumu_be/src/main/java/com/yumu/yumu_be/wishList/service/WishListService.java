@@ -30,10 +30,12 @@ public class WishListService {
         Art art = artRepository.findById(artId).orElseThrow(NotFoundException.NotFoundMemberException::new);
         if (!wishListRepository.existsByArtIdAndMemberId(art.getId(), member.getId())) {
             wishListRepository.save(WishList.of(member, art));
+            art.increaseWishCnt();
             return "해당 작품이 찜 리스트에 추가되었습니다.";
         }
         WishList wishList = wishListRepository.findByArtIdAndMemberId(art.getId(), member.getId()).orElseThrow(NotFoundException.NotFoundMemberException::new);
         wishListRepository.deleteById(wishList.getId());
+        art.decreaseWishCnt();
         return "해당 작품이 찜 리스트에서 삭제되었습니다.";
     }
 }

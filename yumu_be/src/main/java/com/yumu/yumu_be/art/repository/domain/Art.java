@@ -49,4 +49,14 @@ public class Art {
         this.auction = auction;
         auction.addArt(this);
     }
+
+    public void increaseWishCnt() {
+        this.wishCnt += 1;
+    }
+
+    public void decreaseWishCnt() {
+        if (this.wishCnt > 0) {
+            this.wishCnt -= 1;
+        }
+    }
 }

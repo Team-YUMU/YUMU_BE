@@ -47,9 +47,10 @@ public class AuctionService {
             return searchMode(keyWord, pageRequest);
         }
         //인기
-//        if (sort.equals("popular")) {
-//            return artRepository.findByPopular(pageRequest);
-//        }
+        if (sort.equals("popular")) {
+            Page<Art> findPopular = artRepository.findByPopular(pageRequest);
+            return AuctionResponse.of(findPopular.getNumber(), findPopular.getTotalElements(), findPopular.getTotalPages(), findPopular.stream().map(AuctionDto::of).collect(Collectors.toList()));
+        }
         if (sort.equals("live")) {
             Page<Art> findLive = artRepository.findLive(pageRequest);
             return AuctionResponse.of(findLive.getNumber(),findLive.getTotalElements(),findLive.getTotalPages(),findLive.stream().map(AuctionDto::of).collect(Collectors.toList()) );
