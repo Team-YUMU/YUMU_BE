@@ -1,9 +1,6 @@
 package com.yumu.yumu_be.member.controller;
 
-import com.yumu.yumu_be.member.dto.PurchaseHistoryResponse;
-import com.yumu.yumu_be.member.dto.ProfileResponse;
-import com.yumu.yumu_be.member.dto.ProfileRequest;
-import com.yumu.yumu_be.member.dto.SaleHistoryResponse;
+import com.yumu.yumu_be.member.dto.*;
 import com.yumu.yumu_be.member.entity.Member;
 import com.yumu.yumu_be.member.service.ProfileService;
 import com.yumu.yumu_be.security.UserDetailsImpl;
@@ -49,5 +46,12 @@ public class ProfileController {
     public ResponseEntity<List<SaleHistoryResponse>> getMySaleHistory(@RequestParam(value = "cursor") Long cursor, @RequestParam(value = "limit") int limit, @AuthenticationPrincipal UserDetailsImpl userDetails) {
         Long memberId = userDetails.getMember().getId();
         return ResponseEntity.ok(profileService.getMySaleHistory(cursor, limit, memberId));
+    }
+
+    //내 찜 내역 조회
+    @GetMapping("/my-page/wish")
+    public ResponseEntity<List<WishResponse>> getMyWishList(@RequestParam(value = "cursor") Long cursor, @RequestParam(value = "limit") int limit, @AuthenticationPrincipal UserDetailsImpl userDetails) {
+        Long memberId = userDetails.getMember().getId();
+        return ResponseEntity.ok(profileService.getMyWishList(cursor, limit, memberId));
     }
 }
