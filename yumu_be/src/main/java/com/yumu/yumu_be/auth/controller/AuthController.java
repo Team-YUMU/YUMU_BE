@@ -14,6 +14,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import javax.swing.text.html.parser.Entity;
+
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/api/v1/auth")
@@ -24,23 +26,20 @@ public class AuthController {
 
     //회원가입
     @PostMapping("/signup")
-    @ResponseStatus(HttpStatus.CREATED)
-    public void signUp(@RequestBody @Valid SignupRequest signupRequst) throws Exception {
-        authService.signUp(signupRequst);
+    public ResponseEntity<CommonResponse> signUp(@RequestBody @Valid SignupRequest signupRequest) throws Exception {
+        return ResponseEntity.ok(authService.signUp(signupRequest));
     }
 
     //로그인
     @PostMapping("/login")
-    @ResponseStatus(HttpStatus.OK)
-    public void logIn(@RequestBody LoginRequest loginRequest, HttpServletResponse response) throws Exception {
-        authService.logIn(loginRequest, response);
+    public ResponseEntity<CommonResponse> logIn(@RequestBody LoginRequest loginRequest, HttpServletResponse response) throws Exception {
+        return ResponseEntity.ok(authService.logIn(loginRequest, response));
     }
 
     //로그아웃
     @GetMapping("/logout")
-    @ResponseStatus(HttpStatus.OK)
-    public void logOut(HttpServletRequest request) {
-        authService.logOut(request);
+    public ResponseEntity<CommonResponse> logOut(HttpServletRequest request) {
+        return ResponseEntity.ok(authService.logOut(request));
     }
 
     //카카오 로그인 및 회원가입

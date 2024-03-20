@@ -13,6 +13,8 @@ public enum Status {
     INVALID_EMAIL(400, "올바르지 않는 이메일 형식입니다."),
     INVALID_PASSWORD(400, "올바르지 않는 비밀번호 형식입니다."),
     INVALID_NICKNAME(400, "올바르지 않는 닉네임 형식입니다."),
+    NOT_MATCH_PASSWORD(400, "비밀번호와 일치하지 않습니다."),
+    ALREADY_SIGNUP_KAKAO(400, "카카오로 회원가입된 이메일입니다."),
 
 
     //404 Not Found

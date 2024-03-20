@@ -29,6 +29,10 @@ public class ExceptionAdvice {
             return new RestApiException(Status.INVALID_PASSWORD);
         } else if (e instanceof BadRequestException.InvalidNicknameException) {
             return new RestApiException(Status.INVALID_NICKNAME);
+        } else if (e instanceof BadRequestException.NotMatchPasswordException) {
+            return new RestApiException(Status.NOT_MATCH_PASSWORD);
+        } else if (e instanceof BadRequestException.AlreadySignupKakaoException) {
+            return new RestApiException(Status.ALREADY_SIGNUP_KAKAO);
         }
         log.info("Bad Request Error = {}", e.getMessage());
         return new RestApiException(Status.BAD_REQUEST);

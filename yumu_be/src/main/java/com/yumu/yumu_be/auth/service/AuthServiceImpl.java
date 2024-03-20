@@ -2,6 +2,9 @@ package com.yumu.yumu_be.auth.service;
 
 import com.yumu.yumu_be.auth.dto.LoginRequest;
 import com.yumu.yumu_be.auth.dto.SignupRequest;
+import com.yumu.yumu_be.common.dto.CommonResponse;
+import com.yumu.yumu_be.exception.BadRequestException;
+import com.yumu.yumu_be.exception.NotFoundException;
 import com.yumu.yumu_be.jwt.JwtUtil;
 import com.yumu.yumu_be.member.entity.Member;
 import com.yumu.yumu_be.member.repository.MemberRepository;
@@ -10,6 +13,7 @@ import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -29,33 +33,35 @@ public class AuthServiceImpl implements AuthService{
     //회원가입
     @Override
     @Transactional
-    public void signUp(SignupRequest signupRequst) throws Exception {
-        String nickname = signupRequst.getNickname();
-        String email = signupRequst.getEmail();
-        String password = signupRequst.getPassword();
-        String checkPassword = signupRequst.getCheckPassword();
-
-        isExistNickname(nickname);  // 중복 체크
-        isExistEmail(email);
+    public CommonResponse signUp(SignupRequest signupRequest) {
+        String nickname = signupRequest.getNickname();
+        String email = signupRequest.getEmail();
+        String password = signupRequest.getPassword();
+        String checkPassword = signupRequest.getCheckPassword();
+        
+        isExistKaKaoEmail(email); //카카오 이메일 가입자인지 확인
+        isExistEmail(email);    //일반 이메일 가입자인지 확인
 
         if (!password.equals(checkPassword)) {
-            throw new Exception("비밀번호 일치하지 않음");
+            throw new BadRequestException.NotMatchPasswordException();
         }
 
         String encodedPassword = passwordEncoder.encode(password);  // 패스워드 암호화
 
         Member member = new Member(nickname, email, encodedPassword);
         memberRepository.save(member);
+
+        return new CommonResponse("회원가입 완료");
     }
 
     //로그인
     @Override
     @Transactional(readOnly = true)
-    public void logIn(LoginRequest loginRequest, HttpServletResponse response) throws Exception {
+    public CommonResponse logIn(LoginRequest loginRequest, HttpServletResponse response) {
         String nickname = loginRequest.getNickname();
         String password = loginRequest.getPassword();
 
-        Member member = memberRepository.findByNickname(nickname).orElseThrow(Exception::new);
+        Member member = memberRepository.findByNickname(nickname).orElseThrow(NotFoundException.NotFoundMemberException::new);
         validPassword(password, member.getPassword());  //비밀번호 확인
 
         String email = member.getEmail();
@@ -67,12 +73,13 @@ public class AuthServiceImpl implements AuthService{
         response.addHeader(JwtUtil.AUTHORIZATION_HEADER, accessToken);
 
         tokenService.addRefreshTokenByRedis(email, refreshToken, Duration.ofDays(1));   //redis에 refresh token 저장
+        return new CommonResponse("로그인 완료");
     }
 
     //로그아웃
     @Override
     @Transactional(readOnly = true)
-    public void logOut(HttpServletRequest request) {
+    public CommonResponse logOut(HttpServletRequest request) {
         String accessToken = jwtUtil.resolveToken(request);
         Claims claims = jwtUtil.getUserInfoFromToken(accessToken);
 
@@ -85,26 +92,35 @@ public class AuthServiceImpl implements AuthService{
                 tokenService.deleteRefreshTokenByRedis(claims.getSubject());
             }
         }
+
+        return new CommonResponse("로그아웃 완료");
     }
 
     //닉네임 중복 확인
-    private void isExistNickname(String nickname) throws Exception {
+    private void isExistNickname(String nickname) {
         if (memberRepository.existsByNickname(nickname)) {
-            throw new Exception();  //에러명 수정해야함
+            throw new BadRequestException.DuplicatedNicknameException();
+        }
+    }
+
+    //카카오로 가입된 사람인지 확인
+    private void isExistKaKaoEmail(String email) {
+        if (memberRepository.existsByEmailAndProvider(email, "kakao")) {
+            throw new BadRequestException.AlreadySignupKakaoException();
         }
     }
 
     //이메일 중복 확인 확인
-    private void isExistEmail(String email) throws Exception {
+    private void isExistEmail(String email) {
         if (memberRepository.existsByEmail(email)) {
-            throw new Exception();
+            throw new BadRequestException.DuplicatedEmailException();
         }
     }
 
     //인코딩된 비밀번호 확인
-    private void validPassword(String rawPassword, String encodedPassword) throws Exception {
+    private void validPassword(String rawPassword, String encodedPassword) {
         if (!passwordEncoder.matches(rawPassword, encodedPassword)) {
-            throw new Exception();
+            throw new BadRequestException.InvalidPasswordException();
         }
     }
 }

@@ -2,12 +2,14 @@ package com.yumu.yumu_be.auth.service;
 
 import com.yumu.yumu_be.auth.dto.LoginRequest;
 import com.yumu.yumu_be.auth.dto.SignupRequest;
+import com.yumu.yumu_be.common.dto.CommonResponse;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import org.springframework.http.ResponseEntity;
 
 public interface AuthService {
-    void signUp(SignupRequest signupRequst) throws Exception;
-    void logIn(LoginRequest loginRequest, HttpServletResponse response) throws Exception;
+    CommonResponse signUp(SignupRequest signupRequest);
+    CommonResponse logIn(LoginRequest loginRequest, HttpServletResponse response);
 
-    void logOut(HttpServletRequest request);
+    CommonResponse logOut(HttpServletRequest request);
 }
