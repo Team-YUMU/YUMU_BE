@@ -46,6 +46,8 @@ jobs:
         spring.jwt.secret.key: ${{ secrets.JWT_KEY }}
         cloud.aws.credentials.accessKey: ${{ secrets.IAM_ACCESS_KEY }}
         cloud.aws.credentials.secretKey: ${{ secrets.IAM_SECRET_KEY }}
+        spring.security.oauth2.client.registration.kakao.client-id: ${{ secrets.KAKAO_CLIENT_ID }}
+        spring.security.oauth2.client.registration.kakao.client-secret: ${{ secrets.KAKAO_CLIENT_SECRET }}
 
     - name: Init Gradle
       uses: gradle/gradle-build-action@v1
