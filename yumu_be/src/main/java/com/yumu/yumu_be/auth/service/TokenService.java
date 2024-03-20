@@ -31,7 +31,7 @@ public class TokenService {
     }
 
     //redis에 access token의 남은 유효기간 동안 로그아웃 기록 저장
-    public void logoutAccessTokenByRedis(String accessToken, String logout, Long expireTime, TimeUnit milliseconds) {
+    public void logoutAndWitdrawAccessTokenByRedis(String accessToken, String logout, Long expireTime, TimeUnit milliseconds) {
         ValueOperations<String, String> valueOperations = stringRedisTemplate.opsForValue();
         valueOperations.set(accessToken, logout, expireTime, milliseconds);
     }

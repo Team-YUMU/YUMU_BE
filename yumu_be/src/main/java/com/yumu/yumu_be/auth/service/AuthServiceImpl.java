@@ -13,12 +13,12 @@ import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.Duration;
+import java.util.UUID;
 import java.util.concurrent.TimeUnit;
 
 @Service
@@ -38,7 +38,8 @@ public class AuthServiceImpl implements AuthService{
         String email = signupRequest.getEmail();
         String password = signupRequest.getPassword();
         String checkPassword = signupRequest.getCheckPassword();
-        
+
+        isExistNickname(nickname); //닉네임 중복 확인
         isExistKaKaoEmail(email); //카카오 이메일 가입자인지 확인
         isExistEmail(email);    //일반 이메일 가입자인지 확인
 
@@ -54,17 +55,37 @@ public class AuthServiceImpl implements AuthService{
         return new CommonResponse("회원가입 완료");
     }
 
+    //닉네임 중복 확인
+    @Override
+    @Transactional(readOnly = true)
+    public CommonResponse checkNickname(String nickname) {
+        if (memberRepository.existsByNickname(nickname)) {
+            throw new BadRequestException.DuplicatedNicknameException();
+        }
+        return new CommonResponse("사용 가능한 닉네임입니다.");
+    }
+    
+    //이메일 중복 확인
+    @Override
+    @Transactional(readOnly = true)
+    public CommonResponse checkEmail(String email) {
+        if (memberRepository.existsByEmailAndProvider(email, "kakao")) {
+            throw new BadRequestException.AlreadySignupKakaoException();
+        } else if (memberRepository.existsByEmail(email)) {
+            throw new BadRequestException.DuplicatedEmailException();
+        }
+        return new CommonResponse("사용 가능한 이메일입니다.");
+    }
+
     //로그인
     @Override
     @Transactional(readOnly = true)
     public CommonResponse logIn(LoginRequest loginRequest, HttpServletResponse response) {
-        String nickname = loginRequest.getNickname();
+        String email = loginRequest.getEmail();
         String password = loginRequest.getPassword();
 
-        Member member = memberRepository.findByNickname(nickname).orElseThrow(NotFoundException.NotFoundMemberException::new);
+        Member member = memberRepository.findByEmail(email).orElseThrow(NotFoundException.NotFoundMemberException::new);
         validPassword(password, member.getPassword());  //비밀번호 확인
-
-        String email = member.getEmail();
 
         Cookie cookie = jwtUtil.createCookie(email);    //refresh token 생성 및 쿠키 담기
         String refreshToken = cookie.getValue();
@@ -76,6 +97,18 @@ public class AuthServiceImpl implements AuthService{
         return new CommonResponse("로그인 완료");
     }
 
+    //임시 비밀번호 발급
+    @Override
+    @Transactional(readOnly = true)
+    public String findPassword(String email) {
+        isExistEmail(email);
+        Member member = memberRepository.findByEmail(email).orElseThrow(NotFoundException.NotFoundMemberException::new);
+        String password = UUID.randomUUID().toString();
+        String encodedPassword = passwordEncoder.encode(password);
+        member.updatePassword(encodedPassword);
+        return password;
+    }
+
     //로그아웃
     @Override
     @Transactional(readOnly = true)
@@ -84,7 +117,7 @@ public class AuthServiceImpl implements AuthService{
         Claims claims = jwtUtil.getUserInfoFromToken(accessToken);
 
         Long expiration = jwtUtil.getExpiration(accessToken); //access token 남은 유효기간
-        tokenService.logoutAccessTokenByRedis(accessToken, "logout", expiration, TimeUnit.MILLISECONDS);    //redis에 로그아웃 기록 저장
+        tokenService.logoutAndWitdrawAccessTokenByRedis(accessToken, "logout", expiration, TimeUnit.MILLISECONDS);    //redis에 로그아웃 기록 저장
 
         Cookie[] cookies = request.getCookies();            //refresh token 삭제
         for (Cookie cookie : cookies) {
@@ -94,6 +127,36 @@ public class AuthServiceImpl implements AuthService{
         }
 
         return new CommonResponse("로그아웃 완료");
+    }
+
+    //탈퇴
+    @Override
+    @Transactional
+    public CommonResponse withdraw(String password, HttpServletRequest request) {
+        String accessToken = jwtUtil.resolveToken(request);
+        Claims claims = jwtUtil.getUserInfoFromToken(accessToken);
+
+        //존재하는 멤버인지, 입력한 비밀번호와 일치하는지 확인
+        Member member = memberRepository.findByEmail(claims.getSubject()).orElseThrow(NotFoundException.NotFoundMemberException::new);
+        String encodedPassword = passwordEncoder.encode(password);
+        if (!member.getPassword().equals(encodedPassword)) {
+            throw new BadRequestException.NotMatchPasswordException();
+        }
+
+        Long expiration = jwtUtil.getExpiration(accessToken); //access token 남은 유효기간
+        tokenService.logoutAndWitdrawAccessTokenByRedis(accessToken, "withdraw", expiration, TimeUnit.MILLISECONDS);    //redis에 로그아웃 기록 저장
+
+        Cookie[] cookies = request.getCookies();            //refresh token 삭제
+        for (Cookie cookie : cookies) {
+            if (cookie.getName().equals("refreshToken")) {
+                tokenService.deleteRefreshTokenByRedis(claims.getSubject());
+            }
+        }
+
+        //member 삭제
+        memberRepository.delete(member);
+
+        return new CommonResponse("탈퇴 완료");
     }
 
     //닉네임 중복 확인

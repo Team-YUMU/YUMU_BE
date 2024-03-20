@@ -75,4 +75,8 @@ public class Member {
         this.provider = provider;
         this.providerId = providerId;
     }
+
+    public void updatePassword(String encodedPassword) {
+        this.password = encodedPassword;
+    }
 }
