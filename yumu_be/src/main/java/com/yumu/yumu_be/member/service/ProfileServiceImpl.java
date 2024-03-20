@@ -2,16 +2,15 @@ package com.yumu.yumu_be.member.service;
 
 import com.yumu.yumu_be.exception.NotFoundException;
 import com.yumu.yumu_be.image.S3Service;
-import com.yumu.yumu_be.member.dto.PurchaseHistoryResponse;
-import com.yumu.yumu_be.member.dto.ProfileRequest;
-import com.yumu.yumu_be.member.dto.ProfileResponse;
-import com.yumu.yumu_be.member.dto.SaleHistoryResponse;
+import com.yumu.yumu_be.member.dto.*;
 import com.yumu.yumu_be.member.entity.Member;
 import com.yumu.yumu_be.member.entity.PurchaseHistory;
 import com.yumu.yumu_be.member.entity.SaleHistory;
 import com.yumu.yumu_be.member.repository.MemberRepository;
 import com.yumu.yumu_be.member.repository.PurchaseHistoryRepository;
 import com.yumu.yumu_be.member.repository.SaleHistoryRepository;
+import com.yumu.yumu_be.wishList.entity.WishList;
+import com.yumu.yumu_be.wishList.repository.WishListRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Slice;
@@ -30,6 +29,7 @@ public class ProfileServiceImpl implements ProfileService {
     private final S3Service s3Service;
     private final PurchaseHistoryRepository purchaseHistoryRepository;
     private final SaleHistoryRepository saleHistoryRepository;
+    private final WishListRepository wishListRepository;
 
     @Override
     @Transactional
@@ -96,6 +96,30 @@ public class ProfileServiceImpl implements ProfileService {
                     .auctionId(h.getAuctionId())
                     .build();
             response.add(saleDto);
+        }
+        return response;
+    }
+
+    @Override
+    public List<WishResponse> getMyWishList(Long cursor, int limit, Long memberId) {
+        Slice<WishList> wishs;
+        PageRequest pageRequest = PageRequest.of(0, limit);
+        if (cursor == 0) {
+            wishs = wishListRepository.findTopByMember_IdOrderByIdDesc(memberId, pageRequest);
+        } else {
+            wishs = wishListRepository.findNextPage(memberId, cursor, pageRequest);
+        }
+
+        List<WishResponse> response = new ArrayList<>();
+
+        for(WishList w : wishs) {
+            WishResponse wishDto = WishResponse.builder()
+                    .artTitle(w.getArt().getArtName())
+                    .artist(w.getArt().getArtist())
+                    .imageUrl(w.getArt().getArtImage())
+                    .auctionId(w.getArt().getAuction().getId())
+                    .build();
+            response.add(wishDto);
         }
         return response;
     }
