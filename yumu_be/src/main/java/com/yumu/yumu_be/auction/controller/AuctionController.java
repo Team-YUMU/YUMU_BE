@@ -4,23 +4,23 @@ import com.yumu.yumu_be.auction.controller.request.AuctionRequest;
 import com.yumu.yumu_be.auction.controller.response.AuctionResponse;
 import com.yumu.yumu_be.auction.service.AuctionService;
 import com.yumu.yumu_be.auction.controller.response.CommonResponse;
-import org.springframework.http.HttpRequest;
+import com.yumu.yumu_be.wishList.service.WishListService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.io.IOException;
-
 @RestController
 @RequestMapping("/api/v1/auction")
 public class AuctionController implements AuctionApiSpec{
 
     private final AuctionService auctionService;
+    private final WishListService wishListService;
 
-    public AuctionController(AuctionService auctionService) {
+    public AuctionController(AuctionService auctionService, WishListService wishListService) {
         this.auctionService = auctionService;
+        this.wishListService = wishListService;
     }
 
     @Override
@@ -68,5 +68,11 @@ public class AuctionController implements AuctionApiSpec{
         } catch (Exception e) {
             return ResponseEntity.internalServerError().build();
         }
+    }
+
+    @Override
+    @PostMapping("/wish/{id}")
+    public ResponseEntity<String> wishList(@AuthenticationPrincipal UserDetails user, @PathVariable int id) {
+        return ResponseEntity.ok(wishListService.addWishList(user.getUsername(), id));
     }
 }
