@@ -1,6 +1,6 @@
-package com.yumu.yumu_be.auction.repository.domain;
+package com.yumu.yumu_be.auction.entity;
 
-import com.yumu.yumu_be.auction.exception.NoSuchReceiveTypeException;
+import com.yumu.yumu_be.exception.NotFoundException;
 
 import java.util.Arrays;
 
@@ -25,6 +25,6 @@ public enum Receive {
         return Arrays.stream(Receive.values())
                 .filter(t -> t.getType().equals(type))
                 .findFirst()
-                .orElseThrow(NoSuchReceiveTypeException::new);
+                .orElseThrow(NotFoundException.NotFoundReceiveTypeException::new);
     }
 }

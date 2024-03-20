@@ -1,13 +1,14 @@
 package com.yumu.yumu_be.auction.service;
 
 import com.yumu.yumu_be.art.repository.ArtRepository;
-import com.yumu.yumu_be.art.repository.domain.Art;
-import com.yumu.yumu_be.auction.controller.request.AuctionRequest;
-import com.yumu.yumu_be.auction.controller.response.AuctionDto;
-import com.yumu.yumu_be.auction.controller.response.AuctionResponse;
-import com.yumu.yumu_be.auction.exception.AuctionNotFoundException;
+import com.yumu.yumu_be.art.entity.Art;
+import com.yumu.yumu_be.auction.dto.AuctionRequest;
+import com.yumu.yumu_be.auction.dto.AuctionDetailDto;
+import com.yumu.yumu_be.auction.dto.AuctionDto;
+import com.yumu.yumu_be.auction.dto.AuctionResponse;
 import com.yumu.yumu_be.auction.repository.AuctionRepository;
-import com.yumu.yumu_be.auction.repository.domain.Auction;
+import com.yumu.yumu_be.auction.entity.Auction;
+import com.yumu.yumu_be.exception.NotFoundException;
 import com.yumu.yumu_be.image.S3Service;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -68,7 +69,7 @@ public class AuctionService {
 
     @Transactional
     public void delete(int id) {
-        Auction auction = auctionRepository.findById(id).orElseThrow(AuctionNotFoundException::new);
+        Auction auction = auctionRepository.findById(id).orElseThrow(NotFoundException.NotFoundAuctionException::new);
         String imageUrl = auction.getArt().getArtImage();
         auctionRepository.deleteById(id);
         s3Service.deleteFile(imageUrl);
@@ -76,10 +77,15 @@ public class AuctionService {
 
     @Transactional
     public void update(int id, String memberId, AuctionRequest request, MultipartFile multipartFile) throws IOException {
-        Auction auction = auctionRepository.findById(id).orElseThrow(AuctionNotFoundException::new);
+        Auction auction = auctionRepository.findById(id).orElseThrow(NotFoundException.NotFoundAuctionException::new);
         String ordImageUrl = auction.getArt().getArtImage();
         String newImageUrl = s3Service.updateFile(multipartFile, ordImageUrl, memberId);
         auction.updateTo(request.getArtDescription(),request.getArtSize(),request.getArtCreatedDate(), request.getAuctionStartDate(), request.getAuctionEndDate(), request.getDefaultBid(), request.getNotice(), request.getReceiveType());
         auction.getArt().updateTo(request.getArtName(), newImageUrl, memberId, auction);
+    }
+
+    public AuctionDetailDto getDetail(int id) {
+        Auction auction = auctionRepository.findById(id).orElseThrow(NotFoundException.NotFoundAuctionException::new);
+        return AuctionDetailDto.of(auction);
     }
 }

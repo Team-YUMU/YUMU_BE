@@ -1,4 +1,4 @@
-package com.yumu.yumu_be.auction.controller.request;
+package com.yumu.yumu_be.auction.dto;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.Getter;
