@@ -12,4 +12,12 @@ public interface AuthService {
     CommonResponse logIn(LoginRequest loginRequest, HttpServletResponse response);
 
     CommonResponse logOut(HttpServletRequest request);
+
+    CommonResponse checkNickname(String nickname);
+
+    CommonResponse checkEmail(String email);
+
+    String findPassword(String email);
+
+    CommonResponse withdraw(String password, HttpServletRequest request);
 }

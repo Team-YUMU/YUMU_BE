@@ -36,7 +36,7 @@ public class SaleHistory {
 
     private Long auctionId;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.LAZY , cascade = CascadeType.REMOVE)
     @JoinColumn(name = "member_id")
     private Member member;
 }
