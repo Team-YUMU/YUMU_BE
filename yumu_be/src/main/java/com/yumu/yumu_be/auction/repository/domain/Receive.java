@@ -8,7 +8,8 @@ public enum Receive {
     EMAIL("이메일"),
     MAIL("우편"),
     DELIVERY("배송"),
-    DIRECT("직접거래");
+    DIRECT("직접거래"),
+    ETC("기타");
 
     private String type;
 
