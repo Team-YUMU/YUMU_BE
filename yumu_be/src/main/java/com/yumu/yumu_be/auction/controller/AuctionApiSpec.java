@@ -22,4 +22,6 @@ public interface AuctionApiSpec {
 //    ResponseEntity<?> findByPopular();
     @Operation(summary = "경매글 삭제", description = "경매글 삭제 API")
     ResponseEntity<?> delete(int id);
+    @Operation(summary = "경매글 짬 기능", description = "경매글 짬 기능 API")
+    ResponseEntity<?> wishList(UserDetails user, int id);
 }
