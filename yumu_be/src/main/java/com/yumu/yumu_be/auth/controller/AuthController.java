@@ -1,13 +1,17 @@
 package com.yumu.yumu_be.auth.controller;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.yumu.yumu_be.auth.dto.LoginRequest;
 import com.yumu.yumu_be.auth.dto.SignupRequest;
 import com.yumu.yumu_be.auth.service.AuthService;
+import com.yumu.yumu_be.auth.service.KakaoService;
+import com.yumu.yumu_be.common.dto.CommonResponse;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -16,6 +20,7 @@ import org.springframework.web.bind.annotation.*;
 public class AuthController {
 
     private final AuthService authService;
+    private final KakaoService kakaoService;
 
     //회원가입
     @PostMapping("/signup")
@@ -36,5 +41,11 @@ public class AuthController {
     @ResponseStatus(HttpStatus.OK)
     public void logOut(HttpServletRequest request) {
         authService.logOut(request);
+    }
+
+    //카카오 로그인 및 회원가입
+    @GetMapping("/kakao/callback")
+    public ResponseEntity<CommonResponse> kakaoLogin(@RequestParam String code, HttpServletResponse response) throws JsonProcessingException {
+        return ResponseEntity.ok(kakaoService.kakaoLogin(code, response));
     }
 }
