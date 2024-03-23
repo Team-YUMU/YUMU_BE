@@ -78,6 +78,7 @@ public class SecurityConfig {
         config.addAllowedHeader("*");
         config.addAllowedMethod("*");
         config.addExposedHeader(JwtUtil.AUTHORIZATION_HEADER);
+        config.addExposedHeader(JwtUtil.REFRESH_HEADER);
 
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
         source.registerCorsConfiguration("/**",config);
