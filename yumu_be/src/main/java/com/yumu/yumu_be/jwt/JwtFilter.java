@@ -27,7 +27,7 @@ public class JwtFilter extends OncePerRequestFilter {
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
             throws ServletException, IOException {
 
-        String accessToken = jwtUtil.resolveToken(request);
+        String accessToken = jwtUtil.resolveAccessToken(request);
         //1. access token 유효할 경우
         //2. access token 유효하지 않고 refresh token 유효할 경우
         //3. access token, refresh token 유효하지 않을 경우
@@ -41,13 +41,7 @@ public class JwtFilter extends OncePerRequestFilter {
             }
 
             if(!jwtUtil.validationToken(accessToken)) {   //access token이 유효하지 않음
-                Cookie[] list = request.getCookies();
-                String refreshToken = "";                 //cookie에서 refresh token 가져옴
-                for (Cookie cookie:list) {
-                    if (cookie.getName().equals("refreshToken")) {
-                        refreshToken = cookie.getValue();
-                    }
-                }
+                String refreshToken = jwtUtil.resolveRefreshToken(request);
 
                 String email = jwtUtil.getUserInfoFromToken(refreshToken).getSubject(); //refresh token으로 user 정보 가져옴
 

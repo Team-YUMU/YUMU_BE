@@ -6,7 +6,6 @@ import com.yumu.yumu_be.security.UserDetailsServiceImpl;
 import io.jsonwebtoken.*;
 import io.jsonwebtoken.security.Keys;
 import jakarta.annotation.PostConstruct;
-import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -30,6 +29,7 @@ public class JwtUtil {
     private final UserDetailsServiceImpl userDetailsService;
     public final TokenService tokenService;
     public static final String AUTHORIZATION_HEADER = "Authorization"; //헤더에 들어가는 키값
+    public static final String REFRESH_HEADER = "Refresh";
     public static final String AUTHORIZATION_KEY = "auth"; //사용자 권한 키값
     private static final String BEARER_PREFIX = "Bearer"; //토큰 식별자
     private static final long ACCESS_TOKEN_TIME = 30 * 60 * 1000L; //access token 만료 시간 (30분)
@@ -49,9 +49,18 @@ public class JwtUtil {
         this.key = Keys.hmacShaKeyFor(bytes);
     }
 
-    //헤더에서 토큰 가져옴
-    public String resolveToken(HttpServletRequest request) {
+    //헤더에서 어세스 토큰 가져옴
+    public String resolveAccessToken(HttpServletRequest request) {
         String bearerToken = request.getHeader(AUTHORIZATION_HEADER);
+        if (StringUtils.hasText(bearerToken) && bearerToken.startsWith(BEARER_PREFIX)) {
+            return bearerToken.substring(7);
+        }
+        return null;
+    }
+
+    //헤더에서 어세스 토큰 가져옴
+    public String resolveRefreshToken(HttpServletRequest request) {
+        String bearerToken = request.getHeader(REFRESH_HEADER);
         if (StringUtils.hasText(bearerToken) && bearerToken.startsWith(BEARER_PREFIX)) {
             return bearerToken.substring(7);
         }
@@ -81,17 +90,6 @@ public class JwtUtil {
                         .setIssuedAt(date)
                         .signWith(key, signatureAlgorithm)
                         .compact();
-    }
-
-    //refresh token를 cookie에 담음
-    public Cookie createCookie(String email) {
-        String name = "refreshToken";
-        String value = URLEncoder.encode(createRefreshToken(email), StandardCharsets.UTF_8);
-        Cookie cookie = new Cookie(name, value);
-        cookie.setHttpOnly(true);
-        cookie.setPath("/");
-        cookie.setMaxAge(24*60*60);
-        return cookie;
     }
 
     //access token 검증
