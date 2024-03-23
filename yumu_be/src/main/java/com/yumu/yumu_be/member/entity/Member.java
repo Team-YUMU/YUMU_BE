@@ -31,7 +31,7 @@ public class Member {
 
     private String snsLink;
 
-    private String profileImage = "images/default.jpg";
+    private String profileImage;
     
     //카카오
     private String provider;

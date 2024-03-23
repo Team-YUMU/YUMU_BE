@@ -9,7 +9,6 @@ import com.yumu.yumu_be.jwt.JwtUtil;
 import com.yumu.yumu_be.member.entity.Member;
 import com.yumu.yumu_be.member.repository.MemberRepository;
 import io.jsonwebtoken.Claims;
-import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
@@ -87,11 +86,11 @@ public class AuthServiceImpl implements AuthService{
         Member member = memberRepository.findByEmail(email).orElseThrow(NotFoundException.NotFoundMemberException::new);
         validPassword(password, member.getPassword());  //비밀번호 확인
 
-        Cookie cookie = jwtUtil.createCookie(email);    //refresh token 생성 및 쿠키 담기
-        String refreshToken = cookie.getValue();
         String accessToken = jwtUtil.createAccessToken(email, member.getId());  //access token 생성
-        response.addCookie(cookie);
         response.addHeader(JwtUtil.AUTHORIZATION_HEADER, accessToken);
+
+        String refreshToken = jwtUtil.createRefreshToken(email);
+        response.addHeader(JwtUtil.REFRESH_HEADER, refreshToken);
 
         tokenService.addRefreshTokenByRedis(email, refreshToken, Duration.ofDays(1));   //redis에 refresh token 저장
         return new CommonResponse("로그인 완료");
@@ -113,18 +112,13 @@ public class AuthServiceImpl implements AuthService{
     @Override
     @Transactional(readOnly = true)
     public CommonResponse logOut(HttpServletRequest request) {
-        String accessToken = jwtUtil.resolveToken(request);
+        String accessToken = jwtUtil.resolveAccessToken(request);
         Claims claims = jwtUtil.getUserInfoFromToken(accessToken);
 
         Long expiration = jwtUtil.getExpiration(accessToken); //access token 남은 유효기간
         tokenService.logoutAndWitdrawAccessTokenByRedis(accessToken, "logout", expiration, TimeUnit.MILLISECONDS);    //redis에 로그아웃 기록 저장
 
-        Cookie[] cookies = request.getCookies();            //refresh token 삭제
-        for (Cookie cookie : cookies) {
-            if (cookie.getName().equals("refreshToken")) {
-                tokenService.deleteRefreshTokenByRedis(claims.getSubject());
-            }
-        }
+        tokenService.deleteRefreshTokenByRedis(claims.getSubject());    //refresh token 삭제
 
         return new CommonResponse("로그아웃 완료");
     }
@@ -133,7 +127,7 @@ public class AuthServiceImpl implements AuthService{
     @Override
     @Transactional
     public CommonResponse withdraw(String password, HttpServletRequest request) {
-        String accessToken = jwtUtil.resolveToken(request);
+        String accessToken = jwtUtil.resolveAccessToken(request);
         Claims claims = jwtUtil.getUserInfoFromToken(accessToken);
 
         //존재하는 멤버인지, 입력한 비밀번호와 일치하는지 확인
@@ -146,12 +140,7 @@ public class AuthServiceImpl implements AuthService{
         Long expiration = jwtUtil.getExpiration(accessToken); //access token 남은 유효기간
         tokenService.logoutAndWitdrawAccessTokenByRedis(accessToken, "withdraw", expiration, TimeUnit.MILLISECONDS);    //redis에 로그아웃 기록 저장
 
-        Cookie[] cookies = request.getCookies();            //refresh token 삭제
-        for (Cookie cookie : cookies) {
-            if (cookie.getName().equals("refreshToken")) {
-                tokenService.deleteRefreshTokenByRedis(claims.getSubject());
-            }
-        }
+        tokenService.deleteRefreshTokenByRedis(claims.getSubject());    //refreshToken 삭제
 
         //member 삭제
         memberRepository.delete(member);

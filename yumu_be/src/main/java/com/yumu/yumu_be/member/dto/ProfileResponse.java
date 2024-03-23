@@ -12,6 +12,7 @@ public class ProfileResponse {
     private String introduce;
     private String snsLink;
     private String profileImage;
+    private String provider;
 
     public ProfileResponse(Member member) {
         this.nickname = member.getNickname();
@@ -19,5 +20,6 @@ public class ProfileResponse {
         this.introduce = member.getIntroduce();
         this.snsLink = member.getSnsLink();
         this.profileImage = member.getProfileImage();
+        this.provider = member.getProvider();
     }
 }
