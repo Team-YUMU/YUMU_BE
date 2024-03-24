@@ -42,7 +42,7 @@ public class KakaoService {
     private final TokenService tokenService;
 
     //카카오 로그인 로직
-    public CommonResponse kakaoLogin(String code, HttpServletResponse response) throws JsonProcessingException{
+    public void kakaoLogin(String code, HttpServletResponse response) throws JsonProcessingException{
         String kakaoToken = getToken(code); //인가 코드로 액세스 토큰 요청
         KakaoInfoDto kakaoInfoDto = getKakaoUserInfo(kakaoToken); //토큰으로 카카오 api 호출 및 사용자 정보 가져옴
         Member kakaoMember = registerKaKaoMemberIfNeeded(kakaoInfoDto); //받은 정보로 회원가입 처리
@@ -54,7 +54,6 @@ public class KakaoService {
         response.addHeader(JwtUtil.REFRESH_HEADER, refreshToken);
 
         tokenService.addRefreshTokenByRedis(kakaoMember.getEmail(), refreshToken, Duration.ofDays(1));
-        return new CommonResponse("카카오 로그인 성공");
     }
 
     //인가 코드로 access token 요청 로직
