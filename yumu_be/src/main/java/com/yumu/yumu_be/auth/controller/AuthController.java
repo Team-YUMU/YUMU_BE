@@ -13,6 +13,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.view.RedirectView;
 
 import javax.swing.text.html.parser.Entity;
 
@@ -69,8 +70,8 @@ public class AuthController {
 
     //카카오 로그인 및 회원가입
     @GetMapping("/kakao/callback")
-    public String kakaoLogin(@RequestParam String code, HttpServletResponse response) throws JsonProcessingException {
+    public RedirectView kakaoLogin(@RequestParam String code, HttpServletResponse response) throws JsonProcessingException {
         kakaoService.kakaoLogin(code, response);
-        return "redirect:http://localhost:3000";
+        return new RedirectView("http://localhost:3000");
     }
 }
