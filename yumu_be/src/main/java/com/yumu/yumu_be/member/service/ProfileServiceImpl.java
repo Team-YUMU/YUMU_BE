@@ -16,7 +16,6 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Slice;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -40,11 +39,11 @@ public class ProfileServiceImpl implements ProfileService {
 
     @Override
     @Transactional
-    public void updateMyProfile(ProfileRequest request, MultipartFile multipartFile, Member member) throws IOException {
+    public void updateMyProfile(ProfileRequest request, Member member) throws IOException {
         Member myMember = isMember(member.getId()); //존재하는 멤버인지 확인
         String imageUrl = "";
-        if (!multipartFile.isEmpty()) {             //이미지 수정하는지 확인
-            imageUrl = s3Service.upload(multipartFile, String.valueOf(myMember.getId()));
+        if (!request.getProfileImage().isEmpty()) {             //이미지 수정하는지 확인
+            imageUrl = s3Service.upload(request.getProfileImage(), String.valueOf(myMember.getId()));
         }
         myMember.updateProfile(request, imageUrl);
     }

@@ -5,10 +5,10 @@ import com.yumu.yumu_be.member.entity.Member;
 import com.yumu.yumu_be.member.service.ProfileService;
 import com.yumu.yumu_be.security.UserDetailsImpl;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 import java.util.List;
@@ -28,9 +28,9 @@ public class ProfileController {
     }
 
     //내 정보 수정
-    @PutMapping("/member")
-    public ResponseEntity<String> updateMyProfile(@RequestPart("request") ProfileRequest request, @RequestPart(value = "image", required = false) MultipartFile multipartFile, @AuthenticationPrincipal UserDetailsImpl userDetails) throws IOException {
-        profileService.updateMyProfile(request, multipartFile, userDetails.getMember());
+    @PutMapping(value = "/member", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    public ResponseEntity<String> updateMyProfile(@ModelAttribute ProfileRequest request, @AuthenticationPrincipal UserDetailsImpl userDetails) throws IOException {
+        profileService.updateMyProfile(request, userDetails.getMember());
         return ResponseEntity.ok("내 정보 수정 완료");
     }
 
