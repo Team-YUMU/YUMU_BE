@@ -52,7 +52,7 @@ public class Member {
     }
 
     public void updateProfile(ProfileRequest request, String imageUrl) {
-        if (Pattern.matches("[a-zA-Z0-9가-힣]{2,10}", request.getNickname())) {
+        if (!Pattern.matches("[a-zA-Z0-9가-힣]{2,10}", request.getNickname())) {
             throw new BadRequestException.InvalidNicknameException();
         } else {
             this.nickname = request.getNickname();
@@ -62,7 +62,7 @@ public class Member {
             this.introduce = request.getIntroduce();
         }
 
-        if (request.getSnsLink().isEmpty()) {
+        if (!request.getSnsLink().isEmpty()) {
             this.snsLink = request.getSnsLink();
         }
 
