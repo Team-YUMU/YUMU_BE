@@ -14,6 +14,7 @@ public class Art {
     @Column(name="art_id")
     private int id;
     private String artName;
+    private String artSubTitle;
     private String artImage;
     private String artist;
     private Status status;
@@ -26,8 +27,9 @@ public class Art {
     public Art() {
     }
 
-    public Art(String artName, String artImage, String artist, Auction auction) {
+    public Art(String artName, String artSubTitle, String artImage, String artist, Auction auction) {
         this.artName = artName;
+        this.artSubTitle = artSubTitle;
         this.artImage = artImage;
         this.artist = artist;
         this.status = Status.ON;
@@ -36,14 +38,15 @@ public class Art {
         this.auction = auction;
     }
 
-    public static Art of(String artName, String artImage, String artist, Auction auction) {
-        Art art = new Art(artName, artImage, artist, auction);
+    public static Art of(String artName, String artSubTitle, String artImage, String artist, Auction auction) {
+        Art art = new Art(artName, artSubTitle, artImage, artist, auction);
         auction.addArt(art);
         return art;
     }
 
-    public void updateTo(String artName, String artImage, String artist, Auction auction) {
+    public void updateTo(String artName, String artSubTitle, String artImage, String artist, Auction auction) {
         this.artName = artName;
+        this.artSubTitle = artSubTitle;
         this.artImage = artImage;
         this.artist = artist;
         this.auction = auction;
