@@ -14,7 +14,7 @@ public class ChatController {
     @MessageMapping("/{liveId}/chat.sendMessage")
     @SendTo("/liveRoom/{liveId}")
     public ChatResponse sendMessage(@DestinationVariable int liveId, @AuthenticationPrincipal UserDetails user, ChatRequest request) {
-        return ChatResponse.of(user.getUsername(), request.getMessage());
+        return ChatResponse.setChat(user.getUsername(), request.getMessage());
     }
 
     @MessageMapping("/{liveId}/chat.addUser")
@@ -23,3 +23,5 @@ public class ChatController {
         return ChatResponse.setJoinMessage(user.getUsername());
     }
 }
+
+
