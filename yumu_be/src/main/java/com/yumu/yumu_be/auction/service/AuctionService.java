@@ -37,7 +37,7 @@ public class AuctionService {
     public void create(String memberId, AuctionRequest request, MultipartFile multipartFile) throws IOException {
         String imageUrl = s3Service.upload(multipartFile, memberId);
         Auction auction = Auction.of(request.getArtDescription(),request.getArtSize(),request.getArtCreatedDate(), request.getAuctionStartDate(), request.getAuctionEndDate(), request.getDefaultBid(), request.getNotice(), request.getReceiveType());
-        artRepository.save(Art.of(request.getArtName(), imageUrl, memberId, auction));
+        artRepository.save(Art.of(request.getArtName(),request.getArtSubTitle(), imageUrl, memberId, auction));
         auctionRepository.save(auction);
     }
 
@@ -81,7 +81,7 @@ public class AuctionService {
         String ordImageUrl = auction.getArt().getArtImage();
         String newImageUrl = s3Service.updateFile(multipartFile, ordImageUrl, memberId);
         auction.updateTo(request.getArtDescription(),request.getArtSize(),request.getArtCreatedDate(), request.getAuctionStartDate(), request.getAuctionEndDate(), request.getDefaultBid(), request.getNotice(), request.getReceiveType());
-        auction.getArt().updateTo(request.getArtName(), newImageUrl, memberId, auction);
+        auction.getArt().updateTo(request.getArtName(), request.getArtSubTitle(), newImageUrl, memberId, auction);
     }
 
     public AuctionDetailDto getDetail(int id) {
