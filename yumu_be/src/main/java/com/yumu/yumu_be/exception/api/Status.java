@@ -15,6 +15,7 @@ public enum Status {
     INVALID_NICKNAME(400, "올바르지 않는 닉네임 형식입니다."),
     NOT_MATCH_PASSWORD(400, "비밀번호와 일치하지 않습니다."),
     ALREADY_SIGNUP_KAKAO(400, "카카오로 회원가입된 이메일입니다."),
+    LOW_BID_PRICE(400, "입찰가격이 현재 최고가보다 낮습니다."),
 
 
     //404 Not Found

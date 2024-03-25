@@ -27,7 +27,7 @@ public class AuthServiceImpl implements AuthService{
     private final MemberRepository memberRepository;
     private final PasswordEncoder passwordEncoder;
     private final JwtUtil jwtUtil;
-    private final TokenService tokenService;
+    private final RedisTokenService redisTokenService;
 
     //회원가입
     @Override
@@ -92,7 +92,7 @@ public class AuthServiceImpl implements AuthService{
         String refreshToken = jwtUtil.createRefreshToken(email);
         response.addHeader(JwtUtil.REFRESH_HEADER, refreshToken);
 
-        tokenService.addRefreshTokenByRedis(email, refreshToken, Duration.ofDays(1));   //redis에 refresh token 저장
+        redisTokenService.addRefreshTokenByRedis(email, refreshToken, Duration.ofDays(1));   //redis에 refresh token 저장
         return new CommonResponse("로그인 완료");
     }
 
@@ -116,9 +116,9 @@ public class AuthServiceImpl implements AuthService{
         Claims claims = jwtUtil.getUserInfoFromToken(accessToken);
 
         Long expiration = jwtUtil.getExpiration(accessToken); //access token 남은 유효기간
-        tokenService.logoutAndWitdrawAccessTokenByRedis(accessToken, "logout", expiration, TimeUnit.MILLISECONDS);    //redis에 로그아웃 기록 저장
+        redisTokenService.logoutAndWitdrawAccessTokenByRedis(accessToken, "logout", expiration, TimeUnit.MILLISECONDS);    //redis에 로그아웃 기록 저장
 
-        tokenService.deleteRefreshTokenByRedis(claims.getSubject());    //refresh token 삭제
+        redisTokenService.deleteRefreshTokenByRedis(claims.getSubject());    //refresh token 삭제
 
         return new CommonResponse("로그아웃 완료");
     }
@@ -138,9 +138,9 @@ public class AuthServiceImpl implements AuthService{
         }
 
         Long expiration = jwtUtil.getExpiration(accessToken); //access token 남은 유효기간
-        tokenService.logoutAndWitdrawAccessTokenByRedis(accessToken, "withdraw", expiration, TimeUnit.MILLISECONDS);    //redis에 로그아웃 기록 저장
+        redisTokenService.logoutAndWitdrawAccessTokenByRedis(accessToken, "withdraw", expiration, TimeUnit.MILLISECONDS);    //redis에 로그아웃 기록 저장
 
-        tokenService.deleteRefreshTokenByRedis(claims.getSubject());    //refreshToken 삭제
+        redisTokenService.deleteRefreshTokenByRedis(claims.getSubject());    //refreshToken 삭제
 
         //member 삭제
         memberRepository.delete(member);

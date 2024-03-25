@@ -62,4 +62,8 @@ public class Art {
             this.wishCnt -= 1;
         }
     }
+
+    public void updateStatus(Status status) {
+        this.status = status;
+    }
 }

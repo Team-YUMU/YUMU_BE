@@ -33,6 +33,8 @@ public class ExceptionAdvice {
             return new RestApiException(Status.NOT_MATCH_PASSWORD);
         } else if (e instanceof BadRequestException.AlreadySignupKakaoException) {
             return new RestApiException(Status.ALREADY_SIGNUP_KAKAO);
+        } else if (e instanceof BadRequestException.LowBidPriceException) {
+            return new RestApiException(Status.LOW_BID_PRICE);
         }
         log.info("Bad Request Error = {}", e.getMessage());
         return new RestApiException(Status.BAD_REQUEST);

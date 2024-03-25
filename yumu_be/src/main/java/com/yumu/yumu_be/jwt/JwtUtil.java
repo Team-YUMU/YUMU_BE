@@ -1,6 +1,6 @@
 package com.yumu.yumu_be.jwt;
 
-import com.yumu.yumu_be.auth.service.TokenService;
+import com.yumu.yumu_be.auth.service.RedisTokenService;
 import com.yumu.yumu_be.member.entity.Member;
 import com.yumu.yumu_be.security.UserDetailsServiceImpl;
 import io.jsonwebtoken.*;
@@ -16,8 +16,6 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
 
-import java.net.URLEncoder;
-import java.nio.charset.StandardCharsets;
 import java.security.Key;
 import java.util.Base64;
 import java.util.Date;
@@ -27,7 +25,7 @@ import java.util.Date;
 @RequiredArgsConstructor
 public class JwtUtil {
     private final UserDetailsServiceImpl userDetailsService;
-    public final TokenService tokenService;
+    public final RedisTokenService redisTokenService;
     public static final String AUTHORIZATION_HEADER = "Authorization"; //헤더에 들어가는 키값
     public static final String REFRESH_HEADER = "Refresh";
     public static final String AUTHORIZATION_KEY = "auth"; //사용자 권한 키값
@@ -113,7 +111,7 @@ public class JwtUtil {
 
     //refresh token 값 redis에서 가져오기
     public boolean validationRefreshToken(String email, String refreshToken) {
-        return tokenService.getRefreshTokenByRedis(email).equals(refreshToken);
+        return redisTokenService.getRefreshTokenByRedis(email).equals(refreshToken);
     }
 
     //토큰에서 사용자 정보 가져오기

@@ -23,7 +23,7 @@ public class SaleHistory {
     private String artist;
 
     @NotNull
-    private String price;
+    private Long price;
 
     @NotNull
     private String artImage;
@@ -34,9 +34,13 @@ public class SaleHistory {
     @NotNull
     private LocalDateTime saleDate;
 
-    private Long auctionId;
+    private int auctionId;
 
     @ManyToOne(fetch = FetchType.LAZY , cascade = CascadeType.REMOVE)
     @JoinColumn(name = "member_id")
     private Member member;
+
+    public void updateStatus(Status status) {
+        this.status = status;
+    }
 }
