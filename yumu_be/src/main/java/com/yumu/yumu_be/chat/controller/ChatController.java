@@ -13,8 +13,10 @@ import org.springframework.stereotype.Controller;
 public class ChatController {
     @MessageMapping("/{liveId}/chat.sendMessage")
     @SendTo("/liveRoom/{liveId}")
-    public ChatResponse sendMessage(@DestinationVariable int liveId, @AuthenticationPrincipal UserDetails user, ChatRequest request) {
-        return ChatResponse.setChat(user.getUsername(), request.getMessage());
+    public ChatResponse sendMessage(@DestinationVariable int liveId, ChatRequest request) {
+        System.out.println("send message : "+request.getMessage());
+        System.out.println("send message : "+request.getMessage());
+        return ChatResponse.setChat(request.getMemberId(), request.getMessage());
     }
 
     @MessageMapping("/{liveId}/chat.addUser")

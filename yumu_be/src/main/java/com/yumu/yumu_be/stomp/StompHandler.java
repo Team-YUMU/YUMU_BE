@@ -27,6 +27,7 @@ public class StompHandler implements ChannelInterceptor {
         if (StompCommand.CONNECT.equals(accessor.getCommand())) {
             jwtUtil.validationToken(Objects.requireNonNull(accessor.getFirstNativeHeader("Authorization")));
         }
+
         return message;
     }
 }
