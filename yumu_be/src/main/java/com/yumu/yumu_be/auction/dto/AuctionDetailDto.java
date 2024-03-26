@@ -16,12 +16,12 @@ public class AuctionDetailDto {
     private LocalDateTime auctionStartDate;
     private LocalDateTime auctionEndDate;
     private int defaultBid;
-    private int winningBid;
+    private Long winningBid;
     private String winningBidder;
     private String notice;
     private Receive receiveType;
 
-    public AuctionDetailDto(AuctionDto artInfo, int id, String artDescription, String artSize, LocalDateTime artCreatedDate, LocalDateTime auctionStartDate, LocalDateTime auctionEndDate, int defaultBid, int winningBid, String winningBidder, String notice, Receive receiveType) {
+    public AuctionDetailDto(AuctionDto artInfo, int id, String artDescription, String artSize, LocalDateTime artCreatedDate, LocalDateTime auctionStartDate, LocalDateTime auctionEndDate, int defaultBid, Long winningBid, String winningBidder, String notice, Receive receiveType) {
         this.artInfo = artInfo;
         this.id = id;
         this.artDescription = artDescription;

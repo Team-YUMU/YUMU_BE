@@ -4,12 +4,10 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.yumu.yumu_be.auth.dto.KakaoInfoDto;
-import com.yumu.yumu_be.common.dto.CommonResponse;
 import com.yumu.yumu_be.exception.NotFoundException;
 import com.yumu.yumu_be.jwt.JwtUtil;
 import com.yumu.yumu_be.member.entity.Member;
 import com.yumu.yumu_be.member.repository.MemberRepository;
-import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
@@ -39,7 +37,7 @@ public class KakaoService {
     private final MemberRepository memberRepository;
     private final PasswordEncoder passwordEncoder;
     private final JwtUtil jwtUtil;
-    private final TokenService tokenService;
+    private final RedisTokenService redisTokenService;
 
     //카카오 로그인 로직
     public void kakaoLogin(String code, HttpServletResponse response) throws JsonProcessingException{
@@ -53,7 +51,7 @@ public class KakaoService {
         String refreshToken = jwtUtil.createRefreshToken(kakaoMember.getEmail());
         response.addHeader(JwtUtil.REFRESH_HEADER, refreshToken);
 
-        tokenService.addRefreshTokenByRedis(kakaoMember.getEmail(), refreshToken, Duration.ofDays(1));
+        redisTokenService.addRefreshTokenByRedis(kakaoMember.getEmail(), refreshToken, Duration.ofDays(1));
     }
 
     //인가 코드로 access token 요청 로직

@@ -20,7 +20,7 @@ public class Auction {
     private LocalDateTime auctionStartDate;
     private LocalDateTime auctionEndDate;
     private int defaultBid;
-    private int winningBid;
+    private Long winningBid;
     private String winningBidder;
     private String notice;
     private Receive receiveType;
@@ -37,7 +37,7 @@ public class Auction {
         this.auctionStartDate = auctionStartDate;
         this.auctionEndDate = auctionEndDate;
         this.defaultBid = defaultBid;
-        this.winningBid = 0;
+        this.winningBid = 0L;
         this.notice = notice;
         this.receiveType = receiveType;
     }
@@ -57,8 +57,13 @@ public class Auction {
         this.auctionStartDate = auctionStartDate;
         this.auctionEndDate = auctionEndDate;
         this.defaultBid = defaultBid;
-        this.winningBid = 0;
+        this.winningBid = 0L;
         this.notice = notice;
         this.receiveType = Receive.of(receiveType);
+    }
+
+    public void updateSuccessBid(Long winningBid, String winningBidder) {
+        this.winningBid = winningBid;
+        this.winningBidder = winningBidder;
     }
 }

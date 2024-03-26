@@ -12,7 +12,7 @@ import java.time.LocalDateTime;
 public class PurchaseHistoryResponse {
     private String artTitle;
     private String artist;
-    private String price;
+    private Long price;
     private LocalDateTime purchaseDate;
-    private Long auctionId;
+    private int auctionId;
 }

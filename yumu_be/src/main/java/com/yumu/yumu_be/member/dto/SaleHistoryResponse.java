@@ -13,8 +13,8 @@ import java.time.LocalDateTime;
 public class SaleHistoryResponse {
     private String artTitle;
     private String artist;
-    private String price;
+    private Long price;
     private Status status;
     private LocalDateTime saleDate;
-    private Long auctionId;
+    private int auctionId;
 }
