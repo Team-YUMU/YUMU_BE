@@ -58,7 +58,7 @@ public class SecurityConfig {
                                 .requestMatchers("/swagger-ui/**").permitAll()
                                 .requestMatchers("/api/v1/auction/paging").permitAll()
                                 .requestMatchers(HttpMethod.GET,"/api/v1/auction/{id}").permitAll()
-                                .requestMatchers("/socket-connect").permitAll()
+                                .requestMatchers("/ws-stomp/**").permitAll()
                                 .anyRequest().authenticated());
 
         http
