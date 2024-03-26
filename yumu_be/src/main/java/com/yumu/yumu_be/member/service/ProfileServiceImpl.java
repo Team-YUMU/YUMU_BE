@@ -114,6 +114,7 @@ public class ProfileServiceImpl implements ProfileService {
         for(WishList w : wishs) {
             WishResponse wishDto = WishResponse.builder()
                     .artTitle(w.getArt().getArtName())
+                    .artSubtitle(w.getArt().getArtSubTitle())
                     .artist(w.getArt().getArtist())
                     .imageUrl(w.getArt().getArtImage())
                     .auctionId(w.getArt().getAuction().getId())

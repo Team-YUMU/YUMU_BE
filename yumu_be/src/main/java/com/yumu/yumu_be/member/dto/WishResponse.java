@@ -9,6 +9,7 @@ import lombok.Getter;
 @AllArgsConstructor
 public class WishResponse {
     private String artTitle;
+    private String artSubtitle;
     private String artist;
     private String imageUrl;
     private int auctionId;
