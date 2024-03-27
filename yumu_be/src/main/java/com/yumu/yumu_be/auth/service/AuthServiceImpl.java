@@ -38,6 +38,7 @@ public class AuthServiceImpl implements AuthService{
         String email = signupRequest.getEmail();
         String password = signupRequest.getPassword();
         String checkPassword = signupRequest.getCheckPassword();
+        String profileImage = "https://yumu-image.s3.ap-northeast-2.amazonaws.com/default/octicon_person-24.jpg";
 
         isExistNickname(nickname); //닉네임 중복 확인
         isExistKaKaoEmail(email); //카카오 이메일 가입자인지 확인
@@ -49,7 +50,7 @@ public class AuthServiceImpl implements AuthService{
 
         String encodedPassword = passwordEncoder.encode(password);  // 패스워드 암호화
 
-        Member member = new Member(nickname, email, encodedPassword);
+        Member member = new Member(nickname, email, encodedPassword, profileImage);
         memberRepository.save(member);
 
         return new CommonResponse("회원가입 완료");

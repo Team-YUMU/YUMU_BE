@@ -36,16 +36,18 @@ public class Member {
     private String provider;
     private Long providerId;
 
-    public Member(String nickname, String email, String password) {
+    public Member(String nickname, String email, String password, String profileImage) {
         this.nickname = nickname;
         this.email = email;
         this.password = password;
+        this.profileImage = profileImage;
     }
 
-    public Member(String nickname, String email, String password, String provider, Long providerId) {
+    public Member(String nickname, String email, String password, String profileImage, String provider, Long providerId) {
         this.nickname = nickname;
         this.email = email;
         this.password = password;
+        this.profileImage = profileImage;
         this.provider = provider;
         this.providerId = providerId;
     }

@@ -22,6 +22,7 @@ import org.springframework.util.MultiValueMap;
 import org.springframework.web.client.RestTemplate;
 
 import java.time.Duration;
+import java.util.Random;
 import java.util.UUID;
 
 
@@ -125,11 +126,18 @@ public class KakaoService {
 
         Member kakaoMember;
 
+        if (memberRepository.existsByNickname(nickname)) {
+            Random random = new Random();
+            String randomNum = Integer.toString(random.nextInt(1000));
+            nickname = nickname + randomNum;
+        }
+
         //일반, 카카오 회원가입 기록이 없는 회원 => 회원가입 처리
         if (!memberRepository.existsByEmail(checkEmail)) {
             String password = UUID.randomUUID().toString();
             String encodedPassword = passwordEncoder.encode(password);
-            kakaoMember = new Member(nickname, checkEmail, encodedPassword, provider, providerId);
+            String profileImage = "https://yumu-image.s3.ap-northeast-2.amazonaws.com/default/octicon_person-24.jpg";
+            kakaoMember = new Member(nickname, checkEmail, encodedPassword, profileImage, provider, providerId);
             memberRepository.save(kakaoMember);
         }
 
