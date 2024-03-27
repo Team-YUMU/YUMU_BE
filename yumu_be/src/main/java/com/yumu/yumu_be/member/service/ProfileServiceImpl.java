@@ -1,5 +1,6 @@
 package com.yumu.yumu_be.member.service;
 
+import com.yumu.yumu_be.common.dto.CommonResponse;
 import com.yumu.yumu_be.exception.NotFoundException;
 import com.yumu.yumu_be.image.S3Service;
 import com.yumu.yumu_be.member.dto.*;
@@ -16,6 +17,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Slice;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -39,16 +41,39 @@ public class ProfileServiceImpl implements ProfileService {
 
     @Override
     @Transactional
-    public void updateMyProfile(ProfileRequest request, Member member) throws IOException {
-        Member myMember = isMember(member.getId()); //존재하는 멤버인지 확인
-        String imageUrl = "";
-        if (!request.getProfileImage().isEmpty()) {             //이미지 수정하는지 확인
-            imageUrl = s3Service.upload(request.getProfileImage(), String.valueOf(myMember.getId()));
-        }
-        myMember.updateProfile(request, imageUrl);
+    public CommonResponse updateMyNickname(String nickname, Member member) {
+        Member myMember = isMember(member.getId());
+        myMember.updateNickname(nickname);
+        return new CommonResponse("닉네임 수정 완료");
     }
 
     @Override
+    @Transactional
+    public CommonResponse updateMyIntroduce(String introduce, Member member) {
+        Member myMember = isMember(member.getId());
+        myMember.updateIntroduce(introduce);
+        return new CommonResponse("소개글 수정 완료");
+    }
+
+    @Override
+    @Transactional
+    public CommonResponse updateMySnsLink(String snsLink, Member member) {
+        Member myMember = isMember(member.getId());
+        myMember.updateSnsLink(snsLink);
+        return new CommonResponse("sns 링크 수정 완료");
+    }
+
+    @Override
+    @Transactional
+    public CommonResponse updateMyProfileImage(MultipartFile profileImage, Member member) throws IOException{
+        Member myMember = isMember(member.getId());
+        String imageUrl = s3Service.upload(profileImage, String.valueOf(myMember.getId()));
+        myMember.updateProfileImage(imageUrl);
+        return new CommonResponse("이미지 수정 완료");
+    }
+
+    @Override
+    @Transactional(readOnly = true)
     public List<PurchaseHistoryResponse> getMyPurchaseHistory(Long cursor, int limit, Long memberId) {
         Slice<PurchaseHistory> history;
         PageRequest pageRequest = PageRequest.of(0, limit);
@@ -74,6 +99,7 @@ public class ProfileServiceImpl implements ProfileService {
     }
 
     @Override
+    @Transactional(readOnly = true)
     public List<SaleHistoryResponse> getMySaleHistory(Long cursor, int limit, Long memberId) {
         Slice<SaleHistory> history;
         PageRequest pageRequest = PageRequest.of(0, limit);
@@ -100,6 +126,7 @@ public class ProfileServiceImpl implements ProfileService {
     }
 
     @Override
+    @Transactional(readOnly = true)
     public List<WishResponse> getMyWishList(Long cursor, int limit, Long memberId) {
         Slice<WishList> wishs;
         PageRequest pageRequest = PageRequest.of(0, limit);

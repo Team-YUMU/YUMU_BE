@@ -1,5 +1,6 @@
 package com.yumu.yumu_be.member.controller;
 
+import com.yumu.yumu_be.common.dto.CommonResponse;
 import com.yumu.yumu_be.member.dto.*;
 import com.yumu.yumu_be.member.entity.Member;
 import com.yumu.yumu_be.member.service.ProfileService;
@@ -9,6 +10,7 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 import java.util.List;
@@ -27,11 +29,28 @@ public class ProfileController {
         return ResponseEntity.ok(profileService.getMyProfile(member));
     }
 
-    //내 정보 수정
-    @PutMapping(value = "/member", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-    public ResponseEntity<String> updateMyProfile(@ModelAttribute ProfileRequest request, @AuthenticationPrincipal UserDetailsImpl userDetails) throws IOException {
-        profileService.updateMyProfile(request, userDetails.getMember());
-        return ResponseEntity.ok("내 정보 수정 완료");
+    //내 정보 닉네임 수정
+    @PutMapping(value = "/member")
+    public ResponseEntity<CommonResponse> updateMyNickname(@RequestParam String nickname, @AuthenticationPrincipal UserDetailsImpl userDetails) {
+        return ResponseEntity.ok(profileService.updateMyNickname(nickname, userDetails.getMember()));
+    }
+
+    //내 정보 소개글 수정
+    @PutMapping(value = "/member")
+    public ResponseEntity<CommonResponse> updateMyIntroduce(@RequestParam String introduce, @AuthenticationPrincipal UserDetailsImpl userDetails) {
+        return ResponseEntity.ok(profileService.updateMyIntroduce(introduce, userDetails.getMember()));
+    }
+
+    //내 정보 sns 링크 수정
+    @PutMapping(value = "/member")
+    public ResponseEntity<CommonResponse> updateMySnsLink(@RequestParam String snsLink, @AuthenticationPrincipal UserDetailsImpl userDetails) {
+        return ResponseEntity.ok(profileService.updateMySnsLink(snsLink, userDetails.getMember()));
+    }
+
+    //내 정보 이미지 수정
+    @PutMapping(value = "/member")
+    public ResponseEntity<CommonResponse> updateMyProfileImage(@RequestParam MultipartFile profileImage, @AuthenticationPrincipal UserDetailsImpl userDetails) throws IOException {
+        return ResponseEntity.ok(profileService.updateMyProfileImage(profileImage, userDetails.getMember()));
     }
 
     //내 구매 내역 조회
