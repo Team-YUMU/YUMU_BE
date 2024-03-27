@@ -6,6 +6,7 @@ import com.yumu.yumu_be.common.dto.CommonResponse;
 import com.yumu.yumu_be.exception.BadRequestException;
 import com.yumu.yumu_be.exception.NotFoundException;
 import com.yumu.yumu_be.jwt.JwtUtil;
+import com.yumu.yumu_be.member.entity.LoginStatus;
 import com.yumu.yumu_be.member.entity.Member;
 import com.yumu.yumu_be.member.repository.MemberRepository;
 import io.jsonwebtoken.Claims;
@@ -78,7 +79,7 @@ public class AuthServiceImpl implements AuthService{
 
     //로그인
     @Override
-    @Transactional(readOnly = true)
+    @Transactional
     public CommonResponse logIn(LoginRequest loginRequest, HttpServletResponse response) {
         String email = loginRequest.getEmail();
         String password = loginRequest.getPassword();
@@ -93,6 +94,8 @@ public class AuthServiceImpl implements AuthService{
         response.addHeader(JwtUtil.REFRESH_HEADER, refreshToken);
 
         redisTokenService.addRefreshTokenByRedis(email, refreshToken, Duration.ofDays(1));   //redis에 refresh token 저장
+
+        member.updateLoginStatus(LoginStatus.DEFAULT);
         return new CommonResponse("로그인 완료");
     }
 

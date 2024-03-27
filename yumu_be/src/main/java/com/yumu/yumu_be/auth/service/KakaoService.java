@@ -7,6 +7,7 @@ import com.yumu.yumu_be.auth.dto.KakaoInfoDto;
 import com.yumu.yumu_be.common.dto.CommonResponse;
 import com.yumu.yumu_be.exception.NotFoundException;
 import com.yumu.yumu_be.jwt.JwtUtil;
+import com.yumu.yumu_be.member.entity.LoginStatus;
 import com.yumu.yumu_be.member.entity.Member;
 import com.yumu.yumu_be.member.repository.MemberRepository;
 import jakarta.servlet.http.HttpServletResponse;
@@ -15,6 +16,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.*;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.client.RestTemplate;
@@ -41,6 +43,7 @@ public class KakaoService {
     private final RedisTokenService redisTokenService;
 
     //카카오 로그인 로직
+    @Transactional
     public CommonResponse kakaoLogin(String code, HttpServletResponse response) throws JsonProcessingException{
         String kakaoToken = getToken(code); //인가 코드로 액세스 토큰 요청
         KakaoInfoDto kakaoInfoDto = getKakaoUserInfo(kakaoToken); //토큰으로 카카오 api 호출 및 사용자 정보 가져옴
@@ -53,6 +56,8 @@ public class KakaoService {
         response.addHeader(JwtUtil.REFRESH_HEADER, refreshToken);
 
         redisTokenService.addRefreshTokenByRedis(kakaoMember.getEmail(), refreshToken, Duration.ofDays(1));
+
+        kakaoMember.updateLoginStatus(LoginStatus.KAKAO);
 
         return new CommonResponse("카카오 로그인 성공");
     }
@@ -111,7 +116,8 @@ public class KakaoService {
     }
 
     //kakao로 로그인한 회원의 회원가입 처리 로직
-    private Member registerKaKaoMemberIfNeeded(KakaoInfoDto kakaoMemberInfo) {
+    @Transactional
+    public Member registerKaKaoMemberIfNeeded(KakaoInfoDto kakaoMemberInfo) {
         String checkEmail = kakaoMemberInfo.getEmail();     //현재 존재하는 계정인지 확인
         String nickname = kakaoMemberInfo.getNickname();
         Long providerId = kakaoMemberInfo.getId();
