@@ -28,14 +28,15 @@ public class AuctionController implements AuctionApiSpec{
 
     @Override
     @PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-    public ResponseEntity<String> create(@AuthenticationPrincipal UserDetails user, @RequestPart("request") AuctionRequest request) throws IOException {
+    public ResponseEntity<String> create(@AuthenticationPrincipal UserDetails user, @ModelAttribute AuctionRequest request) throws IOException {
+        System.out.println("경매등록 시작합니다");
         auctionService.create(user.getUsername(), request);
         return ResponseEntity.ok("경매글이 성공적으로 등록되었습니다.");
     }
 
     @Override
     @PutMapping(value = "/{id}", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-    public ResponseEntity<String> update(@AuthenticationPrincipal UserDetails user,@PathVariable int id, @RequestPart("request") AuctionRequest request) throws IOException {
+    public ResponseEntity<String> update(@AuthenticationPrincipal UserDetails user,@PathVariable int id, @ModelAttribute AuctionRequest request) throws IOException {
         auctionService.update(id, user.getUsername(), request);
         return ResponseEntity.ok("경매글이 성공적으로 수정되었습니다.");
 
