@@ -16,6 +16,7 @@ public enum Status {
     NOT_MATCH_PASSWORD(400, "비밀번호와 일치하지 않습니다."),
     ALREADY_SIGNUP_KAKAO(400, "카카오로 회원가입된 이메일입니다."),
     LOW_BID_PRICE(400, "입찰가격이 현재 최고가보다 낮습니다."),
+    NOT_MATCH_TID(400, "결제자 정보가 일치하지 않습니다."),
 
 
     //404 Not Found
