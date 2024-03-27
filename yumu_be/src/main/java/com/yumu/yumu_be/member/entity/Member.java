@@ -26,9 +26,9 @@ public class Member {
     @NotNull
     private String password;
 
-    private String introduce;
+    private LoginStatus nowLogin;
 
-    private String snsLink;
+    private String introduce;
 
     private String profileImage;
     
@@ -60,22 +60,16 @@ public class Member {
     }
 
     public void updateNickname(String nickname) {
-        if (!Pattern.matches("[a-zA-Z0-9가-힣]{2,10}", nickname)) {
-            throw new BadRequestException.InvalidNicknameException();
-        } else {
-            this.nickname = nickname;
-        }
+        this.nickname = nickname;
     }
 
     public void updateIntroduce(String introduce) {
         this.introduce = introduce;
     }
 
-    public void updateSnsLink(String snsLink) {
-        this.snsLink = snsLink;
-    }
-
     public void updateProfileImage(String imageUrl) {
         this.profileImage = imageUrl;
     }
+
+    public void updateLoginStatus(LoginStatus loginStatus) { this.nowLogin = loginStatus; }
 }

@@ -15,6 +15,5 @@ public interface ProfileService {
     List<WishResponse> getMyWishList(Long cursor, int limit, Long memberId);
     CommonResponse updateMyNickname(String nickname, Member member);
     CommonResponse updateMyIntroduce(String introduce, Member member);
-    CommonResponse updateMySnsLink(String snsLink, Member member);
     CommonResponse updateMyProfileImage(MultipartFile profileImage, Member member) throws IOException;
 }

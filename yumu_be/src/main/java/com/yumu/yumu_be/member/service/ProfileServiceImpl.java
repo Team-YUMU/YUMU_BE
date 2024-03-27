@@ -1,6 +1,7 @@
 package com.yumu.yumu_be.member.service;
 
 import com.yumu.yumu_be.common.dto.CommonResponse;
+import com.yumu.yumu_be.exception.BadRequestException;
 import com.yumu.yumu_be.exception.NotFoundException;
 import com.yumu.yumu_be.image.S3Service;
 import com.yumu.yumu_be.member.dto.*;
@@ -22,6 +23,7 @@ import org.springframework.web.multipart.MultipartFile;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.regex.Pattern;
 
 @Service
 @RequiredArgsConstructor
@@ -43,6 +45,14 @@ public class ProfileServiceImpl implements ProfileService {
     @Transactional
     public CommonResponse updateMyNickname(String nickname, Member member) {
         Member myMember = isMember(member.getId());
+        //닉네임 중복 확인
+        if (memberRepository.existsByNickname(nickname)) {
+            throw new BadRequestException.DuplicatedNicknameException();
+        }
+        //닉네임 형식 확인
+        if (!Pattern.matches("[a-zA-Z0-9가-힣]{2,10}", nickname)) {
+            throw new BadRequestException.InvalidNicknameException();
+        }
         myMember.updateNickname(nickname);
         return new CommonResponse("닉네임 수정 완료");
     }
@@ -53,14 +63,6 @@ public class ProfileServiceImpl implements ProfileService {
         Member myMember = isMember(member.getId());
         myMember.updateIntroduce(introduce);
         return new CommonResponse("소개글 수정 완료");
-    }
-
-    @Override
-    @Transactional
-    public CommonResponse updateMySnsLink(String snsLink, Member member) {
-        Member myMember = isMember(member.getId());
-        myMember.updateSnsLink(snsLink);
-        return new CommonResponse("sns 링크 수정 완료");
     }
 
     @Override
