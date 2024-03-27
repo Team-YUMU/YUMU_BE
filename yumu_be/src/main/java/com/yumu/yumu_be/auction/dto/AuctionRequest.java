@@ -1,6 +1,9 @@
 package com.yumu.yumu_be.auction.dto;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.databind.PropertyNamingStrategies;
+import com.fasterxml.jackson.databind.PropertyNamingStrategy;
+import com.fasterxml.jackson.databind.annotation.JsonNaming;
 import lombok.Getter;
 import lombok.Setter;
 import org.springframework.format.annotation.DateTimeFormat;
@@ -10,6 +13,7 @@ import java.time.LocalDateTime;
 
 @Getter
 @Setter
+@JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy.class)
 public class AuctionRequest {
     private String artName;
     private String artSubTitle;
