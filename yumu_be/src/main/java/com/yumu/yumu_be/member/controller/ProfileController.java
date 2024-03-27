@@ -48,7 +48,7 @@ public class ProfileController {
     }
 
     //내 정보 이미지 수정
-    @PutMapping(value = "/member/profile-image")
+    @PutMapping(value = "/member/profile-image", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<CommonResponse> updateMyProfileImage(@RequestBody MultipartFile profileImage, @AuthenticationPrincipal UserDetailsImpl userDetails) throws IOException {
         return ResponseEntity.ok(profileService.updateMyProfileImage(profileImage, userDetails.getMember()));
     }
