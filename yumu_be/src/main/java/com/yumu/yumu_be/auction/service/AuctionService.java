@@ -18,6 +18,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
+import java.time.LocalDateTime;
 import java.util.stream.Collectors;
 
 @Service
@@ -55,6 +56,12 @@ public class AuctionService {
         if (sort.equals("live")) {
             Page<Art> findLive = artRepository.findLive(pageRequest);
             return AuctionResponse.of(findLive.getNumber(),findLive.getTotalElements(),findLive.getTotalPages(),findLive.stream().map(AuctionDto::of).collect(Collectors.toList()) );
+        }
+        if (sort.equals("liveSoon")) {
+            System.out.println(LocalDateTime.now());
+            pageRequest = PageRequest.of(page, size, Sort.by("auction_start_date").ascending());
+            Page<Auction> findLiveSoon = auctionRepository.findLiveSoon(pageRequest,LocalDateTime.now() );
+            return AuctionResponse.of(findLiveSoon.getNumber(),findLiveSoon.getTotalElements(),findLiveSoon.getTotalPages(),findLiveSoon.stream().map(auction-> AuctionDto.of(auction.getArt())).collect(Collectors.toList()) );
         }
         Page<Art> findLatest = artRepository.findLatest(pageRequest);
         return AuctionResponse.of(findLatest.getNumber(),findLatest.getTotalElements(),findLatest.getTotalPages(),findLatest.stream().map(AuctionDto::of).collect(Collectors.toList()) );
