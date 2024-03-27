@@ -12,9 +12,9 @@ import java.io.IOException;
 @Tag(name = "Auction", description = "경매글")
 public interface AuctionApiSpec {
     @Operation(summary = "경매글 등록", description = "경매글 등록 API")
-    ResponseEntity<?> create(UserDetails user, AuctionRequest request, MultipartFile multipartFile) throws IOException;
+    ResponseEntity<?> create(UserDetails user, AuctionRequest request) throws IOException;
     @Operation(summary = "경매글 수정", description = "경매글 수정 API")
-    ResponseEntity<?> update(UserDetails user, int id,AuctionRequest request, MultipartFile multipartFile) throws IOException;
+    ResponseEntity<?> update(UserDetails user, int id,AuctionRequest request) throws IOException;
     @Operation(summary = "경매글 조회", description = "경매글 조회 API")
     ResponseEntity<?> find(int page, int size, String sort, String keyWord);
 //    @Operation(summary = "최근 경매글 조회", description = "경매글 최신순 조회 API")
