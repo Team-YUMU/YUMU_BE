@@ -2,12 +2,14 @@ package com.yumu.yumu_be.auction.dto;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.Getter;
+import lombok.Setter;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.time.LocalDateTime;
 
 @Getter
+@Setter
 public class AuctionRequest {
     private String artName;
     private String artSubTitle;
@@ -18,10 +20,10 @@ public class AuctionRequest {
     @DateTimeFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss.SSSz")
     private LocalDateTime artCreatedDate;
 //    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ss", timezone = "Asia/Seoul")
-    @DateTimeFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss.SSSZ")
+    @DateTimeFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss.SSSz")
     private LocalDateTime auctionStartDate;
 //    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ss", timezone = "Asia/Seoul")
-    @DateTimeFormat(pattern = "yyyy-MM-dd'T'HH:mm:ssX")
+    @DateTimeFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss.SSSz")
     private LocalDateTime auctionEndDate;
     private Integer defaultBid;
     private String notice;
