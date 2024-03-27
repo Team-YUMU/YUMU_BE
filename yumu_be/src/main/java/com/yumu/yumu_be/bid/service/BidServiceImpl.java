@@ -63,6 +63,7 @@ public class BidServiceImpl implements BidService {
     }
 
     @Override
+    @Transactional
     public CommonResponse successBid(int auctionId) {
         //art의 status와 auction의 낙찰자, 낙찰가 수정
         String key = serializeKey(auctionId);
@@ -87,6 +88,7 @@ public class BidServiceImpl implements BidService {
     }
 
     @Override
+    @Transactional(readOnly = true)
     public HighestPriceResponse firstHighestPrice(int auctionId) {
         String key = serializeKey(auctionId);
         if (!redisBidService.isExistBid(key)) {
