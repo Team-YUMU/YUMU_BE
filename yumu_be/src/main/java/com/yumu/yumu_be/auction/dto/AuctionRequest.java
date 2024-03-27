@@ -18,7 +18,7 @@ public class AuctionRequest {
     private LocalDateTime auctionStartDate;
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ss", timezone = "Asia/Seoul")
     private LocalDateTime auctionEndDate;
-    private int defaultBid;
+    private Integer defaultBid;
     private String notice;
     private String receiveType;
     private MultipartFile image;
