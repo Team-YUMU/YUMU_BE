@@ -35,6 +35,8 @@ public class ExceptionAdvice {
             return new RestApiException(Status.ALREADY_SIGNUP_KAKAO);
         } else if (e instanceof BadRequestException.LowBidPriceException) {
             return new RestApiException(Status.LOW_BID_PRICE);
+        } else if (e instanceof BadRequestException.NotMatchTidException) {
+            return new RestApiException(Status.NOT_MATCH_TID);
         }
         log.info("Bad Request Error = {}", e.getMessage());
         return new RestApiException(Status.BAD_REQUEST);

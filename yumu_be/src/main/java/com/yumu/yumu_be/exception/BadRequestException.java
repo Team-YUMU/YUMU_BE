@@ -11,4 +11,5 @@ public class BadRequestException extends RuntimeException {
     public static class NotMatchPasswordException extends BadRequestException {}
     public static class AlreadySignupKakaoException extends BadRequestException {}
     public static class LowBidPriceException extends BadRequestException {}
+    public static class NotMatchTidException extends BadRequestException {}
 }

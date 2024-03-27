@@ -73,3 +73,7 @@ cloud:
       auto: false
     s3:
       bucket: yumu-image
+
+kakaopay:
+  adminkey: ${KAKAO_ADMIN_KEY}
+  cid: TC0ONETIME
