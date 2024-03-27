@@ -36,10 +36,13 @@ public class AuctionService {
     }
     @Transactional
     public void create(String memberId, AuctionRequest request) throws IOException {
+        System.out.println("이미지 업로드 시작합니다");
         String imageUrl = s3Service.upload(request.getImage(), memberId);
+        System.out.println("이미지 업로드  종료합니다");
         Auction auction = Auction.of(request.getArtDescription(),request.getArtSize(),request.getArtCreatedDate(), request.getAuctionStartDate(), request.getAuctionEndDate(), request.getDefaultBid(), request.getNotice(), request.getReceiveType());
         artRepository.save(Art.of(request.getArtName(),request.getArtSubTitle(), imageUrl, memberId, auction));
         auctionRepository.save(auction);
+        System.out.println("경매글 저장 종료합니다");
     }
 
     public AuctionResponse find(int page, int size, String sort, String keyWord) {
