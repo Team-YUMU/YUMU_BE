@@ -61,6 +61,7 @@ public class AuctionService {
             System.out.println(LocalDateTime.now());
             pageRequest = PageRequest.of(page, size, Sort.by("auction_start_date").ascending());
             Page<Auction> findLiveSoon = auctionRepository.findLiveSoon(pageRequest,LocalDateTime.now() );
+            System.out.println("임박 라이브 조회 완료 로그"+findLiveSoon.get().findFirst().get().getArt().getArtName());
             return AuctionResponse.of(findLiveSoon.getNumber(),findLiveSoon.getTotalElements(),findLiveSoon.getTotalPages(),findLiveSoon.stream().map(auction-> AuctionDto.of(auction.getArt())).collect(Collectors.toList()) );
         }
         Page<Art> findLatest = artRepository.findLatest(pageRequest);
