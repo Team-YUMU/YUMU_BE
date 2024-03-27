@@ -15,6 +15,7 @@ public class Auction {
     private int id;
     @Column(columnDefinition = "TEXT")
     private String artDescription;
+    private String artSummary;
     private String artSize;
     private LocalDateTime artCreatedDate;
     private LocalDateTime auctionStartDate;
@@ -30,8 +31,9 @@ public class Auction {
     public Auction() {
     }
 
-    public Auction(String artDescription, String artSize, LocalDateTime artCreatedDate, LocalDateTime auctionStartDate, LocalDateTime auctionEndDate, int defaultBid, String notice, Receive receiveType) {
+    public Auction(String artDescription, String artSummary, String artSize, LocalDateTime artCreatedDate, LocalDateTime auctionStartDate, LocalDateTime auctionEndDate, int defaultBid, String notice, Receive receiveType) {
         this.artDescription = artDescription;
+        this.artSummary = artSummary;
         this.artSize = artSize;
         this.artCreatedDate = artCreatedDate;
         this.auctionStartDate = auctionStartDate;
@@ -42,16 +44,17 @@ public class Auction {
         this.receiveType = receiveType;
     }
 
-    public static Auction of(String artDescription, String artSize, LocalDateTime artCreatedDate, LocalDateTime auctionStartDate, LocalDateTime auctionEndDate, int defaultBid, String notice, String receiveType) {
-        return new Auction(artDescription, artSize, artCreatedDate, auctionStartDate, auctionEndDate, defaultBid, notice, Receive.of(receiveType));
+    public static Auction of(String artDescription, String artSummary, String artSize, LocalDateTime artCreatedDate, LocalDateTime auctionStartDate, LocalDateTime auctionEndDate, int defaultBid, String notice, String receiveType) {
+        return new Auction(artDescription, artSummary, artSize, artCreatedDate, auctionStartDate, auctionEndDate, defaultBid, notice, Receive.of(receiveType));
     }
 
     public void addArt(Art art) {
         this.art = art;
     }
 
-    public void updateTo(String artDescription, String artSize, LocalDateTime artCreatedDate, LocalDateTime auctionStartDate, LocalDateTime auctionEndDate, int defaultBid, String notice, String receiveType) {
+    public void updateTo(String artDescription, String artSummary, String artSize, LocalDateTime artCreatedDate, LocalDateTime auctionStartDate, LocalDateTime auctionEndDate, int defaultBid, String notice, String receiveType) {
         this.artDescription = artDescription;
+        this.artSummary = artSummary;
         this.artSize = artSize;
         this.artCreatedDate = artCreatedDate;
         this.auctionStartDate = auctionStartDate;

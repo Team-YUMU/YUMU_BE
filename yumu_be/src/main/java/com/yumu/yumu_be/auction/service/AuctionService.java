@@ -39,7 +39,7 @@ public class AuctionService {
         System.out.println("이미지 업로드 시작합니다");
         String imageUrl = s3Service.upload(request.getImage(), memberId);
         System.out.println("이미지 업로드  종료합니다");
-        Auction auction = Auction.of(request.getArtDescription(),request.getArtSize(),request.getArtCreatedDate(), request.getAuctionStartDate(), request.getAuctionEndDate(), request.getDefaultBid(), request.getNotice(), request.getReceiveType());
+        Auction auction = Auction.of(request.getArtDescription(), request.getArtSummary() ,request.getArtSize(),request.getArtCreatedDate(), request.getAuctionStartDate(), request.getAuctionEndDate(), request.getDefaultBid(), request.getNotice(), request.getReceiveType());
         artRepository.save(Art.of(request.getArtName(),request.getArtSubTitle(), imageUrl, memberId, auction));
         auctionRepository.save(auction);
         System.out.println("경매글 저장 종료합니다");
@@ -94,7 +94,7 @@ public class AuctionService {
         Auction auction = auctionRepository.findById(id).orElseThrow(NotFoundException.NotFoundAuctionException::new);
         String ordImageUrl = auction.getArt().getArtImage();
         String newImageUrl = s3Service.updateFile(request.getImage(), ordImageUrl, memberId);
-        auction.updateTo(request.getArtDescription(),request.getArtSize(),request.getArtCreatedDate(), request.getAuctionStartDate(), request.getAuctionEndDate(), request.getDefaultBid(), request.getNotice(), request.getReceiveType());
+        auction.updateTo(request.getArtDescription(), request.getArtSummary(), request.getArtSize(),request.getArtCreatedDate(), request.getAuctionStartDate(), request.getAuctionEndDate(), request.getDefaultBid(), request.getNotice(), request.getReceiveType());
         auction.getArt().updateTo(request.getArtName(), request.getArtSubTitle(), newImageUrl, memberId, auction);
     }
 
