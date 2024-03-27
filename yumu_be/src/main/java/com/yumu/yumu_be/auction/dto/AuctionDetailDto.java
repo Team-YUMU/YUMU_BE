@@ -11,6 +11,7 @@ public class AuctionDetailDto {
     private AuctionDto artInfo;
     private int id;
     private String artDescription;
+    private String artSummary;
     private String artSize;
     private LocalDateTime artCreatedDate;
     private LocalDateTime auctionStartDate;
@@ -21,10 +22,11 @@ public class AuctionDetailDto {
     private String notice;
     private Receive receiveType;
 
-    public AuctionDetailDto(AuctionDto artInfo, int id, String artDescription, String artSize, LocalDateTime artCreatedDate, LocalDateTime auctionStartDate, LocalDateTime auctionEndDate, int defaultBid, Long winningBid, String winningBidder, String notice, Receive receiveType) {
+    public AuctionDetailDto(AuctionDto artInfo, int id, String artDescription, String artSummary, String artSize, LocalDateTime artCreatedDate, LocalDateTime auctionStartDate, LocalDateTime auctionEndDate, int defaultBid, Long winningBid, String winningBidder, String notice, Receive receiveType) {
         this.artInfo = artInfo;
         this.id = id;
         this.artDescription = artDescription;
+        this.artSummary = artSummary;
         this.artSize = artSize;
         this.artCreatedDate = artCreatedDate;
         this.auctionStartDate = auctionStartDate;
@@ -37,6 +39,6 @@ public class AuctionDetailDto {
     }
 
     public static AuctionDetailDto of(Auction auction) {
-        return new AuctionDetailDto(AuctionDto.of(auction.getArt()), auction.getId(), auction.getArtDescription(), auction.getArtSize(), auction.getArtCreatedDate(), auction.getAuctionStartDate(), auction.getAuctionEndDate(), auction.getDefaultBid(), auction.getWinningBid(), auction.getWinningBidder(), auction.getNotice(), auction.getReceiveType());
+        return new AuctionDetailDto(AuctionDto.of(auction.getArt()), auction.getId(), auction.getArtDescription(), auction.getArtSummary(), auction.getArtSize(), auction.getArtCreatedDate(), auction.getAuctionStartDate(), auction.getAuctionEndDate(), auction.getDefaultBid(), auction.getWinningBid(), auction.getWinningBidder(), auction.getNotice(), auction.getReceiveType());
     }
 }
