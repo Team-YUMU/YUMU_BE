@@ -46,7 +46,10 @@ public class AuctionService {
         PageRequest pageRequest = PageRequest.of(page, size, Sort.by("createdAt").descending());
 //        검색
         if (!keyWord.isBlank()) {
-            return searchMode(keyWord, pageRequest);
+            if (sort.equals("popular")) {
+                return getSearchAndPopular(keyWord, pageRequest, sort);
+            }
+            return getSearch(keyWord, pageRequest);
         }
         //인기
         if (sort.equals("popular")) {
@@ -68,7 +71,7 @@ public class AuctionService {
         return AuctionResponse.of(findLatest.getNumber(),findLatest.getTotalElements(),findLatest.getTotalPages(),findLatest.stream().map(AuctionDto::of).collect(Collectors.toList()) );
     }
 
-    private AuctionResponse searchMode(String keyWord, PageRequest pageRequest) {
+    private AuctionResponse getSearch(String keyWord, PageRequest pageRequest) {
         Page<Art> findByKeyword = artRepository.findByKeyWord(keyWord, pageRequest);
         return AuctionResponse.of(findByKeyword.getNumber(),findByKeyword.getTotalElements(),findByKeyword.getTotalPages(),findByKeyword.stream()
                 .map(AuctionDto::of)
@@ -95,5 +98,12 @@ public class AuctionService {
     public AuctionDetailDto getDetail(int id) {
         Auction auction = auctionRepository.findById(id).orElseThrow(NotFoundException.NotFoundAuctionException::new);
         return AuctionDetailDto.of(auction);
+    }
+
+    private AuctionResponse getSearchAndPopular(String keyWord, PageRequest pageRequest, String sort) {
+        Page<Art> findByKeyword = artRepository.findByKeyWordSortByWishCnt(keyWord, pageRequest, sort);
+        return AuctionResponse.of(findByKeyword.getNumber(),findByKeyword.getTotalElements(),findByKeyword.getTotalPages(),findByKeyword.stream()
+                .map(AuctionDto::of)
+                .collect(Collectors.toList()));
     }
 }
