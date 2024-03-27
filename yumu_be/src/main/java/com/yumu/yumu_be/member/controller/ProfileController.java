@@ -30,26 +30,26 @@ public class ProfileController {
     }
 
     //내 정보 닉네임 수정
-    @PutMapping(value = "/member")
-    public ResponseEntity<CommonResponse> updateMyNickname(@RequestParam String nickname, @AuthenticationPrincipal UserDetailsImpl userDetails) {
+    @PutMapping(value = "/member/nickname")
+    public ResponseEntity<CommonResponse> updateMyNickname(@RequestBody String nickname, @AuthenticationPrincipal UserDetailsImpl userDetails) {
         return ResponseEntity.ok(profileService.updateMyNickname(nickname, userDetails.getMember()));
     }
 
     //내 정보 소개글 수정
-    @PutMapping(value = "/member")
-    public ResponseEntity<CommonResponse> updateMyIntroduce(@RequestParam String introduce, @AuthenticationPrincipal UserDetailsImpl userDetails) {
+    @PutMapping(value = "/member/introduce")
+    public ResponseEntity<CommonResponse> updateMyIntroduce(@RequestBody String introduce, @AuthenticationPrincipal UserDetailsImpl userDetails) {
         return ResponseEntity.ok(profileService.updateMyIntroduce(introduce, userDetails.getMember()));
     }
 
     //내 정보 sns 링크 수정
-    @PutMapping(value = "/member")
-    public ResponseEntity<CommonResponse> updateMySnsLink(@RequestParam String snsLink, @AuthenticationPrincipal UserDetailsImpl userDetails) {
+    @PutMapping(value = "/member/sns-link")
+    public ResponseEntity<CommonResponse> updateMySnsLink(@RequestBody String snsLink, @AuthenticationPrincipal UserDetailsImpl userDetails) {
         return ResponseEntity.ok(profileService.updateMySnsLink(snsLink, userDetails.getMember()));
     }
 
     //내 정보 이미지 수정
-    @PutMapping(value = "/member")
-    public ResponseEntity<CommonResponse> updateMyProfileImage(@RequestParam MultipartFile profileImage, @AuthenticationPrincipal UserDetailsImpl userDetails) throws IOException {
+    @PutMapping(value = "/member/profile-image")
+    public ResponseEntity<CommonResponse> updateMyProfileImage(@RequestBody MultipartFile profileImage, @AuthenticationPrincipal UserDetailsImpl userDetails) throws IOException {
         return ResponseEntity.ok(profileService.updateMyProfileImage(profileImage, userDetails.getMember()));
     }
 
