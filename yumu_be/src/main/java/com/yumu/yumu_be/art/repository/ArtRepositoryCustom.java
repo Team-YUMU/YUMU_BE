@@ -7,4 +7,5 @@ import org.springframework.data.domain.Pageable;
 public interface ArtRepositoryCustom {
 
     Page<Art> findByKeyWord(String keyWord, Pageable pageable);
+    Page<Art> findByKeyWordSortByWishCnt(String keyWord, Pageable pageable, String sort);
 }
