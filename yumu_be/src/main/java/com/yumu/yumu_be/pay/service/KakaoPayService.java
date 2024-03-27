@@ -28,7 +28,7 @@ public class KakaoPayService {
     @Value("${kakaopay.cid}")
     private String cid;
 
-    @Value("${kakaopay.adminkey}")
+    @Value("${kakaopay.admin-key}")
     private String adminKey;
 
     private final AuctionRepository auctionRepository;

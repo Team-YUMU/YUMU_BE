@@ -75,5 +75,5 @@ cloud:
       bucket: yumu-image
 
 kakaopay:
-  adminkey: ${KAKAO_ADMIN_KEY}
+  admin-key: ${KAKAO_ADMIN_KEY}
   cid: TC0ONETIME
