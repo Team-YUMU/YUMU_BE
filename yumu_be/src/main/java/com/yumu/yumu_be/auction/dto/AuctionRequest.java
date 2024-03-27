@@ -15,13 +15,13 @@ public class AuctionRequest {
     private String artSummary;
     private String artSize;
 //    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd", timezone = "Asia/Seoul")
-    @DateTimeFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss")
+    @DateTimeFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss.SSSz")
     private LocalDateTime artCreatedDate;
 //    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ss", timezone = "Asia/Seoul")
-    @DateTimeFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss")
+    @DateTimeFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss.SSSZ")
     private LocalDateTime auctionStartDate;
 //    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ss", timezone = "Asia/Seoul")
-    @DateTimeFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss")
+    @DateTimeFormat(pattern = "yyyy-MM-dd'T'HH:mm:ssX")
     private LocalDateTime auctionEndDate;
     private Integer defaultBid;
     private String notice;
