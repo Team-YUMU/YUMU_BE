@@ -31,19 +31,19 @@ public class ProfileController {
 
     //내 정보 닉네임 수정
     @PutMapping(value = "/member/nickname")
-    public ResponseEntity<CommonResponse> updateMyNickname(@RequestParam("nickname") String nickname, @AuthenticationPrincipal UserDetailsImpl userDetails) {
+    public ResponseEntity<CommonResponse> updateMyNickname(@RequestParam(value = "nickname") String nickname, @AuthenticationPrincipal UserDetailsImpl userDetails) {
         return ResponseEntity.ok(profileService.updateMyNickname(nickname, userDetails.getMember()));
     }
 
     //내 정보 소개글 수정
     @PutMapping(value = "/member/introduce")
-    public ResponseEntity<CommonResponse> updateMyIntroduce(@RequestParam("introduce") String introduce, @AuthenticationPrincipal UserDetailsImpl userDetails) {
+    public ResponseEntity<CommonResponse> updateMyIntroduce(@RequestParam(value = "introduce") String introduce, @AuthenticationPrincipal UserDetailsImpl userDetails) {
         return ResponseEntity.ok(profileService.updateMyIntroduce(introduce, userDetails.getMember()));
     }
 
     //내 정보 이미지 수정
     @PostMapping(value = "/member/profile-image", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-    public ResponseEntity<CommonResponse> updateMyProfileImage(@RequestParam("profileImage") MultipartFile profileImage, @AuthenticationPrincipal UserDetailsImpl userDetails) throws IOException {
+    public ResponseEntity<CommonResponse> updateMyProfileImage(@RequestParam(value = "profileImage") MultipartFile profileImage, @AuthenticationPrincipal UserDetailsImpl userDetails) throws IOException {
         return ResponseEntity.ok(profileService.updateMyProfileImage(profileImage, userDetails.getMember()));
     }
 
