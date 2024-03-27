@@ -5,6 +5,7 @@ import com.yumu.yumu_be.auction.dto.AuctionDetailDto;
 import com.yumu.yumu_be.auction.dto.AuctionResponse;
 import com.yumu.yumu_be.auction.service.AuctionService;
 import com.yumu.yumu_be.wishList.service.WishListService;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -26,16 +27,16 @@ public class AuctionController implements AuctionApiSpec{
     }
 
     @Override
-    @PostMapping
-    public ResponseEntity<String> create(@AuthenticationPrincipal UserDetails user, @RequestPart("request") AuctionRequest request, @RequestPart("image") MultipartFile multipartFile) throws IOException {
-        auctionService.create(user.getUsername(), request, multipartFile);
+    @PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    public ResponseEntity<String> create(@AuthenticationPrincipal UserDetails user, @RequestPart("request") AuctionRequest request) throws IOException {
+        auctionService.create(user.getUsername(), request);
         return ResponseEntity.ok("경매글이 성공적으로 등록되었습니다.");
     }
 
     @Override
-    @PutMapping("/{id}")
-    public ResponseEntity<String> update(@AuthenticationPrincipal UserDetails user,@PathVariable int id, @RequestPart("request") AuctionRequest request, @RequestPart("image") MultipartFile multipartFile) throws IOException {
-        auctionService.update(id, user.getUsername(), request, multipartFile);
+    @PutMapping(value = "/{id}", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    public ResponseEntity<String> update(@AuthenticationPrincipal UserDetails user,@PathVariable int id, @RequestPart("request") AuctionRequest request) throws IOException {
+        auctionService.update(id, user.getUsername(), request);
         return ResponseEntity.ok("경매글이 성공적으로 수정되었습니다.");
 
     }

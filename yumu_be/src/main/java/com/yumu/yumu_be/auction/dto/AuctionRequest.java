@@ -21,8 +21,9 @@ public class AuctionRequest {
     private int defaultBid;
     private String notice;
     private String receiveType;
+    private MultipartFile image;
 
-    public AuctionRequest(String artName, String artSubTitle, String artDescription, String artSize, LocalDateTime artCreatedDate, LocalDateTime auctionStartDate, LocalDateTime auctionEndDate, int defaultBid, String notice, String receiveType) {
+    public AuctionRequest(String artName, String artSubTitle, String artDescription, String artSize, LocalDateTime artCreatedDate, LocalDateTime auctionStartDate, LocalDateTime auctionEndDate, int defaultBid, String notice, String receiveType, MultipartFile image) {
         this.artName = artName;
         this.artSubTitle = artSubTitle;
         this.artDescription = artDescription;
@@ -33,5 +34,6 @@ public class AuctionRequest {
         this.defaultBid = defaultBid;
         this.notice = notice;
         this.receiveType = receiveType;
+        this.image = image;
     }
 }

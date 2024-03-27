@@ -35,8 +35,8 @@ public class AuctionService {
         this.s3Service = s3Service;
     }
     @Transactional
-    public void create(String memberId, AuctionRequest request, MultipartFile multipartFile) throws IOException {
-        String imageUrl = s3Service.upload(multipartFile, memberId);
+    public void create(String memberId, AuctionRequest request) throws IOException {
+        String imageUrl = s3Service.upload(request.getImage(), memberId);
         Auction auction = Auction.of(request.getArtDescription(),request.getArtSize(),request.getArtCreatedDate(), request.getAuctionStartDate(), request.getAuctionEndDate(), request.getDefaultBid(), request.getNotice(), request.getReceiveType());
         artRepository.save(Art.of(request.getArtName(),request.getArtSubTitle(), imageUrl, memberId, auction));
         auctionRepository.save(auction);
@@ -87,10 +87,10 @@ public class AuctionService {
     }
 
     @Transactional
-    public void update(int id, String memberId, AuctionRequest request, MultipartFile multipartFile) throws IOException {
+    public void update(int id, String memberId, AuctionRequest request) throws IOException {
         Auction auction = auctionRepository.findById(id).orElseThrow(NotFoundException.NotFoundAuctionException::new);
         String ordImageUrl = auction.getArt().getArtImage();
-        String newImageUrl = s3Service.updateFile(multipartFile, ordImageUrl, memberId);
+        String newImageUrl = s3Service.updateFile(request.getImage(), ordImageUrl, memberId);
         auction.updateTo(request.getArtDescription(),request.getArtSize(),request.getArtCreatedDate(), request.getAuctionStartDate(), request.getAuctionEndDate(), request.getDefaultBid(), request.getNotice(), request.getReceiveType());
         auction.getArt().updateTo(request.getArtName(), request.getArtSubTitle(), newImageUrl, memberId, auction);
     }
