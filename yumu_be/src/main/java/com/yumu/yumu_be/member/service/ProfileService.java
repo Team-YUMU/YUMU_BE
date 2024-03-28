@@ -16,4 +16,6 @@ public interface ProfileService {
     CommonResponse updateMyNickname(String nickname, Member member);
     CommonResponse updateMyIntroduce(String introduce, Member member);
     CommonResponse updateMyProfileImage(MultipartFile profileImage, Member member) throws IOException;
+    CommonResponse deleteMyProfileImage(Long memberId);
+    CommonResponse updateMyPassword(PasswordRequest request, Long memberId);
 }

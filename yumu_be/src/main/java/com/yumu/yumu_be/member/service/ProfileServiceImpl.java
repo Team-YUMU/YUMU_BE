@@ -16,6 +16,7 @@ import com.yumu.yumu_be.wishList.repository.WishListRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Slice;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
@@ -33,9 +34,10 @@ public class ProfileServiceImpl implements ProfileService {
     private final PurchaseHistoryRepository purchaseHistoryRepository;
     private final SaleHistoryRepository saleHistoryRepository;
     private final WishListRepository wishListRepository;
+    private final PasswordEncoder passwordEncoder;
 
     @Override
-    @Transactional
+    @Transactional(readOnly = true)
     public ProfileResponse getMyProfile(Member member) {
         Member myMember = isMember(member.getId());     //존재하는 멤버인지 확인
         return new ProfileResponse(myMember);
@@ -72,6 +74,28 @@ public class ProfileServiceImpl implements ProfileService {
         String imageUrl = s3Service.upload(profileImage, String.valueOf(myMember.getId()));
         myMember.updateProfileImage(imageUrl);
         return new CommonResponse("이미지 수정 완료");
+    }
+
+    @Override
+    @Transactional
+    public CommonResponse deleteMyProfileImage(Long memberId) {
+        Member member = isMember(memberId);
+        s3Service.deleteFile(member.getProfileImage());
+        member.updateProfileImage("https://yumu-image.s3.ap-northeast-2.amazonaws.com/default/octicon_person-24.jpg");
+        return new CommonResponse("이미지 삭제 완료");
+    }
+
+    @Override
+    @Transactional
+    public CommonResponse updateMyPassword(PasswordRequest request, Long memberId) {
+        Member myMember = isMember(memberId);
+        String nowPassword = myMember.getPassword();
+        if (!passwordEncoder.matches(request.getPassword(), nowPassword)) {
+            throw new BadRequestException.NotMatchPasswordException();
+        }
+        myMember.updatePassword(passwordEncoder.encode(request.getNewPassword()));
+
+        return new CommonResponse("비밀번호 수정 완료");
     }
 
     @Override

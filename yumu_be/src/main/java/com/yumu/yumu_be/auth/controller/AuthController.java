@@ -33,13 +33,13 @@ public class AuthController {
 
     //닉네임 중복 확인
     @GetMapping("/signup/nickname-check")
-    public ResponseEntity<CommonResponse> checkNickname(@RequestBody String nickname) {
+    public ResponseEntity<CommonResponse> checkNickname(@RequestParam(value = "nickname") String nickname) {
         return ResponseEntity.ok(authService.checkNickname(nickname));
     }
 
     //이메일 중복 확인
     @GetMapping("/signup/email-check")
-    public ResponseEntity<CommonResponse> checkEmail(@RequestBody String email) {
+    public ResponseEntity<CommonResponse> checkEmail(@RequestParam(value = "email") String email) {
         return ResponseEntity.ok(authService.checkEmail(email));
     }
 
@@ -70,7 +70,8 @@ public class AuthController {
 
     //카카오 로그인 및 회원가입
     @GetMapping("/kakao/callback")
-    public ResponseEntity<CommonResponse> kakaoLogin(@RequestParam String code, HttpServletResponse response) throws JsonProcessingException {
-        return ResponseEntity.ok(kakaoService.kakaoLogin(code, response));
+    public RedirectView kakaoLogin(@RequestParam String code, HttpServletResponse response) throws JsonProcessingException {
+        kakaoService.kakaoLogin(code, response);
+        return new RedirectView("http://localhost:3000/callback?code=" + code);
     }
 }

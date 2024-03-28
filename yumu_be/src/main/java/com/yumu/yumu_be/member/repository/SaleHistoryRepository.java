@@ -6,7 +6,9 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Slice;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.stereotype.Repository;
 
+@Repository
 public interface SaleHistoryRepository extends JpaRepository<SaleHistory, Long> {
     Slice<SaleHistory> findTopByMember_IdOrderByIdDesc(Long memberId, PageRequest pageRequest);
 
