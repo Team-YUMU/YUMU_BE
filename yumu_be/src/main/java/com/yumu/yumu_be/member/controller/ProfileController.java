@@ -55,8 +55,8 @@ public class ProfileController {
 
     //비밀번호 일치 체크
     @GetMapping("/member/password")
-    public ResponseEntity<CommonResponse> checkMyPassword(String password, @AuthenticationPrincipal UserDetailsImpl userDetails) {
-        return ResponseEntity.ok(profileService.checkMyPassword(password, userDetails.getMember()));
+    public ResponseEntity<CommonResponse> checkMyPassword(@RequestBody PasswordCheckRequest request, @AuthenticationPrincipal UserDetailsImpl userDetails) {
+        return ResponseEntity.ok(profileService.checkMyPassword(request.getPassword(), userDetails.getMember()));
     }
 
     //내 비밀번호 수정
