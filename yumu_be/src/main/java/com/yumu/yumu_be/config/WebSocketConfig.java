@@ -29,7 +29,6 @@ public class WebSocketConfig implements WebSocketMessageBrokerConfigurer {
 
     @Override
     public void registerStompEndpoints(StompEndpointRegistry registry) {
-        System.out.println("ㄹ댜저ㅑㅁ럊ㄹ댜ㅓㅐㅁ랴ㅓㅐㅁ러ㅑㄷㅈ먖러ㅐ");
         registry.addEndpoint("/ws-stomp").setAllowedOriginPatterns("*").withSockJS(); //소켓 연결 경로
     }
 
