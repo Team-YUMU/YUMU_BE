@@ -65,7 +65,7 @@ public class BidServiceImpl implements BidService {
 
     @Override
     @Transactional
-    public CommonResponse successBid(int auctionId) {
+    public CommonResponse successBid(int auctionId, Member member) {
         //art의 status와 auction의 낙찰자, 낙찰가 수정
         String key = serializeKey(auctionId);
         Long successBidderId = redisBidRepository.getBidder(key);   //낙찰자의 id값
@@ -78,12 +78,12 @@ public class BidServiceImpl implements BidService {
         auction.updateSuccessBid(successPrice, successBidder.getNickname());
         art.updateStatus(Status.DONE);
 
-        //구매자의 구매목록 추가, 판매자의 판매목록 상태 수정
-        PurchaseHistory purchaseHistory = new PurchaseHistory(art, successPrice);
+        //구매자의 구매목록 추가, 판매자의 판매목록 추가
+        PurchaseHistory purchaseHistory = new PurchaseHistory(art, successPrice, successBidder);
         purchaseHistoryRepository.save(purchaseHistory);
 
-        SaleHistory saleHistory = saleHistoryRepository.findByAuctionId(auctionId);
-        saleHistory.updateStatus(Status.DONE);
+        SaleHistory saleHistory = new SaleHistory(art, successPrice, member);
+        saleHistoryRepository.save(saleHistory);
 
         return new CommonResponse("낙찰 완료");
     }

@@ -14,7 +14,6 @@ public class SaleHistoryResponse {
     private String artTitle;
     private String artist;
     private Long price;
-    private Status status;
     private LocalDateTime saleDate;
     private int auctionId;
 }
