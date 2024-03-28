@@ -45,6 +45,7 @@ public class Auction {
     }
 
     public static Auction of(String artDescription, String artSummary, String artSize, LocalDateTime artCreatedDate, LocalDateTime auctionStartDate, LocalDateTime auctionEndDate, Integer defaultBid, String notice, String receiveType) {
+        System.out.println(Receive.of(receiveType));
         return new Auction(artDescription, artSummary, artSize, artCreatedDate, auctionStartDate, auctionEndDate, defaultBid, notice, Receive.of(receiveType));
     }
 

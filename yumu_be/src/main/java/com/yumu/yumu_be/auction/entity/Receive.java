@@ -22,6 +22,7 @@ public enum Receive {
     }
 
     public static Receive of(String type) {
+        System.out.println("recieve type : "+type);
         return Arrays.stream(Receive.values())
                 .filter(t -> t.getType().equals(type))
                 .findFirst()
