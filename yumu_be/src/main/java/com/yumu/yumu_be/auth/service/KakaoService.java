@@ -10,6 +10,7 @@ import com.yumu.yumu_be.exception.NotFoundException;
 import com.yumu.yumu_be.jwt.JwtUtil;
 import com.yumu.yumu_be.member.entity.LoginStatus;
 import com.yumu.yumu_be.member.entity.Member;
+import com.yumu.yumu_be.member.entity.RandomImage;
 import com.yumu.yumu_be.member.repository.MemberRepository;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
@@ -22,6 +23,7 @@ import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.client.RestTemplate;
 
+import java.security.SecureRandom;
 import java.time.Duration;
 import java.util.Random;
 import java.util.UUID;
@@ -128,16 +130,14 @@ public class KakaoService {
         Member kakaoMember;
 
         if (memberRepository.existsByNickname(nickname)) {
-            Random random = new Random();
-            String randomNum = Integer.toString(random.nextInt(1000));
-            nickname = nickname + randomNum;
+            nickname = getRandomNickname(nickname);
         }
 
         //일반, 카카오 회원가입 기록이 없는 회원 => 회원가입 처리
         if (!memberRepository.existsByEmail(checkEmail)) {
             String password = UUID.randomUUID().toString();
             String encodedPassword = passwordEncoder.encode(password);
-            String profileImage = "https://yumu-image.s3.ap-northeast-2.amazonaws.com/default/octicon_person-24.jpg";
+            String profileImage = getRandomImage();
             kakaoMember = new Member(nickname, checkEmail, encodedPassword, profileImage, provider, providerId);
             memberRepository.save(kakaoMember);
         }
@@ -151,5 +151,20 @@ public class KakaoService {
         }
 
         return kakaoMember;
+    }
+
+    //랜덤 닉네임 생성
+    private String getRandomNickname(String nickname) {
+        SecureRandom rand = new SecureRandom();
+        String randomNum = Integer.toString(rand.nextInt(1000));
+        return nickname + randomNum;
+    }
+
+    //랜덤 이미지 선택
+    private String getRandomImage() {
+        SecureRandom rand = new SecureRandom();
+        int randomNum = rand.nextInt(4);
+        RandomImage randomImage = RandomImage.values()[randomNum];
+        return randomImage.getType();
     }
 }

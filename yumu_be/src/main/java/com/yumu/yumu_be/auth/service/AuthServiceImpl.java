@@ -9,6 +9,7 @@ import com.yumu.yumu_be.exception.NotFoundException;
 import com.yumu.yumu_be.jwt.JwtUtil;
 import com.yumu.yumu_be.member.entity.LoginStatus;
 import com.yumu.yumu_be.member.entity.Member;
+import com.yumu.yumu_be.member.entity.RandomImage;
 import com.yumu.yumu_be.member.repository.MemberRepository;
 import io.jsonwebtoken.Claims;
 import jakarta.servlet.http.HttpServletRequest;
@@ -21,7 +22,10 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.security.NoSuchAlgorithmException;
+import java.security.SecureRandom;
 import java.time.Duration;
+import java.util.Random;
 import java.util.UUID;
 import java.util.concurrent.TimeUnit;
 
@@ -42,7 +46,7 @@ public class AuthServiceImpl implements AuthService{
         String email = signupRequest.getEmail();
         String password = signupRequest.getPassword();
         String checkPassword = signupRequest.getCheckPassword();
-        String profileImage = "https://yumu-image.s3.ap-northeast-2.amazonaws.com/default/octicon_person-24.jpg";
+        String profileImage = getRandomImage(); //랜덤 이미지 선택
 
         isExistNickname(nickname); //닉네임 중복 확인
         isExistKaKaoEmail(email); //카카오 이메일 가입자인지 확인
@@ -185,5 +189,13 @@ public class AuthServiceImpl implements AuthService{
         if (!passwordEncoder.matches(rawPassword, encodedPassword)) {
             throw new BadRequestException.InvalidPasswordException();
         }
+    }
+
+    //랜덤 이미지 선택
+    private String getRandomImage() {
+        SecureRandom rand = new SecureRandom();
+        int randomNum = rand.nextInt(4);
+        RandomImage randomImage = RandomImage.values()[randomNum];
+        return randomImage.getType();
     }
 }
