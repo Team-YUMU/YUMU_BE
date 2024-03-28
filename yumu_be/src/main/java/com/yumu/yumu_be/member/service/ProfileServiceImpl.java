@@ -113,7 +113,7 @@ public class ProfileServiceImpl implements ProfileService {
         Slice<PurchaseHistory> history;
         PageRequest pageRequest = PageRequest.of(0, limit);
         if (cursor == null) {
-            history = purchaseHistoryRepository.findTopByMember_IdOrderByIdDesc(memberId, pageRequest);
+            history = purchaseHistoryRepository.findTopByMemberIdOrderByIdDesc(memberId, pageRequest);
         } else {
             history = purchaseHistoryRepository.findNextPage(memberId, cursor, pageRequest);
         }
@@ -139,7 +139,7 @@ public class ProfileServiceImpl implements ProfileService {
         Slice<SaleHistory> history;
         PageRequest pageRequest = PageRequest.of(0, limit);
         if (cursor == 0) {
-            history = saleHistoryRepository.findTopByMember_IdOrderByIdDesc(memberId, pageRequest);
+            history = saleHistoryRepository.findTopByMemberIdOrderByIdDesc(memberId, pageRequest);
         } else {
             history = saleHistoryRepository.findNextPage(memberId, cursor, pageRequest);
         }
@@ -153,7 +153,7 @@ public class ProfileServiceImpl implements ProfileService {
                     .price(h.getPrice())
                     .status(h.getStatus())
                     .saleDate(h.getSaleDate())
-                    .auctionId(h.getAuctionId())
+                    .auctionId(h.getAuction().getId())
                     .build();
             response.add(saleDto);
         }
@@ -166,7 +166,7 @@ public class ProfileServiceImpl implements ProfileService {
         Slice<WishList> wishs;
         PageRequest pageRequest = PageRequest.of(0, limit);
         if (cursor == 0) {
-            wishs = wishListRepository.findTopByMember_IdOrderByIdDesc(memberId, pageRequest);
+            wishs = wishListRepository.findTopByMemberIdOrderByIdDesc(memberId, pageRequest);
         } else {
             wishs = wishListRepository.findNextPage(memberId, cursor, pageRequest);
         }
