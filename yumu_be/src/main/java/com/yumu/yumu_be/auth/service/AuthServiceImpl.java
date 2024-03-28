@@ -112,18 +112,6 @@ public class AuthServiceImpl implements AuthService{
         return new CommonResponse("로그인 완료");
     }
 
-    //임시 비밀번호 발급
-    @Override
-    @Transactional
-    public String findPassword(String email) {
-        isExistEmail(email);
-        Member member = memberRepository.findByEmail(email).orElseThrow(NotFoundException.NotFoundMemberException::new);
-        String password = UUID.randomUUID().toString();
-        String encodedPassword = passwordEncoder.encode(password);
-        member.updatePassword(encodedPassword);
-        return password;
-    }
-
     //로그아웃
     @Override
     public CommonResponse logOut(HttpServletRequest request) {

@@ -50,12 +50,6 @@ public class AuthController {
         return ResponseEntity.ok(authService.logIn(loginRequest, response));
     }
 
-    //비밀번호 찾기 - 임시 비밀번호 발급
-    @GetMapping("/auth/login/find-password")
-    public ResponseEntity<String> findPassword(@RequestBody PasswordFindRequest request) {
-        return ResponseEntity.ok(authService.findPassword(request.getEmail()));
-    }
-
     //로그아웃
     @PostMapping("/logout")
     public ResponseEntity<CommonResponse> logOut(HttpServletRequest request) {
