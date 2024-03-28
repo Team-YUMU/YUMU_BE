@@ -1,10 +1,7 @@
 package com.yumu.yumu_be.auth.controller;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
-import com.yumu.yumu_be.auth.dto.LoginRequest;
-import com.yumu.yumu_be.auth.dto.PasswordFindRequest;
-import com.yumu.yumu_be.auth.dto.SignupRequest;
-import com.yumu.yumu_be.auth.dto.WithdrawRequest;
+import com.yumu.yumu_be.auth.dto.*;
 import com.yumu.yumu_be.auth.service.AuthService;
 import com.yumu.yumu_be.auth.service.KakaoService;
 import com.yumu.yumu_be.common.dto.CommonResponse;
@@ -36,14 +33,14 @@ public class AuthController {
 
     //닉네임 중복 확인
     @GetMapping("/auth/signup/nickname-check")
-    public ResponseEntity<CommonResponse> checkNickname(@RequestParam(value = "nickname") String nickname) {
-        return ResponseEntity.ok(authService.checkNickname(nickname));
+    public ResponseEntity<CommonResponse> checkNickname(@RequestBody NicknameCheckRequest request) {
+        return ResponseEntity.ok(authService.checkNickname(request.getNickname()));
     }
 
     //이메일 중복 확인
     @GetMapping("/auth/signup/email-check")
-    public ResponseEntity<CommonResponse> checkEmail(@RequestParam(value = "email") String email) {
-        return ResponseEntity.ok(authService.checkEmail(email));
+    public ResponseEntity<CommonResponse> checkEmail(@RequestBody EmailCheckRequest request) {
+        return ResponseEntity.ok(authService.checkEmail(request.getEmail()));
     }
 
 
