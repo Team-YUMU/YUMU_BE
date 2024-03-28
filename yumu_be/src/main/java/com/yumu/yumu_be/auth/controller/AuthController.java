@@ -72,6 +72,6 @@ public class AuthController {
     @GetMapping("/kakao/callback")
     public RedirectView kakaoLogin(@RequestParam String code, HttpServletResponse response) throws JsonProcessingException {
         kakaoService.kakaoLogin(code, response);
-        return new RedirectView("http://localhost:3000/callback");
+        return new RedirectView("http://localhost:3000/callback?code=" + code);
     }
 }
