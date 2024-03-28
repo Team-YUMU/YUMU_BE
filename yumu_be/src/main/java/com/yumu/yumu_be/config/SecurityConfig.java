@@ -64,8 +64,6 @@ public class SecurityConfig {
         http
                 .addFilterBefore(new JwtFilter(jwtUtil, redisTemplate), UsernamePasswordAuthenticationFilter.class);
 
-
-
         return http.build();
 
     }

@@ -53,6 +53,12 @@ public class ProfileController {
         return ResponseEntity.ok(profileService.deleteMyProfileImage(userDetails.getMember().getId()));
     }
 
+    //비밀번호 일치 체크
+    @GetMapping("/member/password")
+    public ResponseEntity<CommonResponse> checkMyPassword(String password, @AuthenticationPrincipal UserDetailsImpl userDetails) {
+        return ResponseEntity.ok(profileService.checkMyPassword(password, userDetails.getMember()));
+    }
+
     //내 비밀번호 수정
     @PutMapping("/member/password")
     public ResponseEntity<CommonResponse> updateMyPassword(@RequestBody PasswordRequest request, @AuthenticationPrincipal UserDetailsImpl userDetails) {
