@@ -7,6 +7,7 @@ import com.yumu.yumu_be.image.S3Service;
 import com.yumu.yumu_be.member.dto.*;
 import com.yumu.yumu_be.member.entity.Member;
 import com.yumu.yumu_be.member.entity.PurchaseHistory;
+import com.yumu.yumu_be.member.entity.RandomImage;
 import com.yumu.yumu_be.member.entity.SaleHistory;
 import com.yumu.yumu_be.member.repository.MemberRepository;
 import com.yumu.yumu_be.member.repository.PurchaseHistoryRepository;
@@ -23,6 +24,7 @@ import org.springframework.util.StringUtils;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
+import java.security.SecureRandom;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.regex.Pattern;
@@ -82,7 +84,7 @@ public class ProfileServiceImpl implements ProfileService {
     public CommonResponse deleteMyProfileImage(Long memberId) {
         Member member = isMember(memberId);
         s3Service.deleteFile(member.getProfileImage());
-        member.updateProfileImage("https://yumu-image.s3.ap-northeast-2.amazonaws.com/default/octicon_person-24.jpg");
+        member.updateProfileImage(this.getRandomImage());
         return new CommonResponse("이미지 삭제 완료");
     }
 
@@ -188,6 +190,14 @@ public class ProfileServiceImpl implements ProfileService {
     //존재하는 멤버인지 확인하는 로직
     public Member isMember(Long id) {
         return memberRepository.findById(id).orElseThrow(NotFoundException.NotFoundMemberException::new);
+    }
+
+    //랜덤 이미지 선택
+    private String getRandomImage() {
+        SecureRandom rand = new SecureRandom();
+        int randomNum = rand.nextInt(4);
+        RandomImage randomImage = RandomImage.values()[randomNum];
+        return randomImage.getType();
     }
 
 }
