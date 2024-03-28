@@ -151,9 +151,8 @@ public class ProfileServiceImpl implements ProfileService {
                     .artTitle(h.getArtTitle())
                     .artist(h.getArtist())
                     .price(h.getPrice())
-                    .status(h.getStatus())
                     .saleDate(h.getSaleDate())
-                    .auctionId(h.getAuction().getId())
+                    .auctionId(h.getAuctionId())
                     .build();
             response.add(saleDto);
         }

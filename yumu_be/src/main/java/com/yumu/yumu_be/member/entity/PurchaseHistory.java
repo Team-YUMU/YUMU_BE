@@ -39,12 +39,13 @@ public class PurchaseHistory {
     @JoinColumn(name = "member_id")
     private Member member;
 
-    public PurchaseHistory(Art art, Long price) {
+    public PurchaseHistory(Art art, Long price, Member member) {
         this. artTitle = art.getArtName();
         this.artist = art.getArtist();
         this.price = price;
         this.artImage = art.getArtImage();
         this.purchaseDate = LocalDateTime.now();
         this.auctionId = art.getAuction().getId();
+        this.member = member;
     }
 }

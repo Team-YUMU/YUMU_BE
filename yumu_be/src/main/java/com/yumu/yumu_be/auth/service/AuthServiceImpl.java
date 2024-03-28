@@ -10,7 +10,9 @@ import com.yumu.yumu_be.jwt.JwtUtil;
 import com.yumu.yumu_be.member.entity.LoginStatus;
 import com.yumu.yumu_be.member.entity.Member;
 import com.yumu.yumu_be.member.entity.RandomImage;
+import com.yumu.yumu_be.member.entity.SaleHistory;
 import com.yumu.yumu_be.member.repository.MemberRepository;
+import com.yumu.yumu_be.member.repository.SaleHistoryRepository;
 import io.jsonwebtoken.Claims;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -25,6 +27,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.security.NoSuchAlgorithmException;
 import java.security.SecureRandom;
 import java.time.Duration;
+import java.util.List;
 import java.util.Random;
 import java.util.UUID;
 import java.util.concurrent.TimeUnit;
@@ -37,6 +40,7 @@ public class AuthServiceImpl implements AuthService{
     private final PasswordEncoder passwordEncoder;
     private final JwtUtil jwtUtil;
     private final RedisTokenRepository redisTokenRepository;
+    private final SaleHistoryRepository saleHistoryRepository;
 
     //회원가입
     @Override

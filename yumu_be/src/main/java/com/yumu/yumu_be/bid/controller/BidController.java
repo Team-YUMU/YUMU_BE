@@ -24,8 +24,8 @@ public class BidController {
 
     //낙찰 - 이건 action 데이터 수정 + 구매 리스트 추가인데 post? put?
     @PostMapping("/bid")
-    public ResponseEntity<CommonResponse> successBid(@RequestParam int auctionId) {
-        return ResponseEntity.ok(bidService.successBid(auctionId));
+    public ResponseEntity<CommonResponse> successBid(@RequestParam int auctionId, @AuthenticationPrincipal UserDetailsImpl userDetails) {
+        return ResponseEntity.ok(bidService.successBid(auctionId, userDetails.getMember()));
     }
 
     //최초 입장 최고가
