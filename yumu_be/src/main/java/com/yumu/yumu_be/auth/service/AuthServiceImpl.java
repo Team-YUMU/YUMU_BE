@@ -2,6 +2,7 @@ package com.yumu.yumu_be.auth.service;
 
 import com.yumu.yumu_be.auth.dto.LoginRequest;
 import com.yumu.yumu_be.auth.dto.SignupRequest;
+import com.yumu.yumu_be.auth.repository.RedisTokenRepository;
 import com.yumu.yumu_be.common.dto.CommonResponse;
 import com.yumu.yumu_be.exception.BadRequestException;
 import com.yumu.yumu_be.exception.NotFoundException;
@@ -28,7 +29,7 @@ public class AuthServiceImpl implements AuthService{
     private final MemberRepository memberRepository;
     private final PasswordEncoder passwordEncoder;
     private final JwtUtil jwtUtil;
-    private final RedisTokenService redisTokenService;
+    private final RedisTokenRepository redisTokenRepository;
 
     //회원가입
     @Override
@@ -94,7 +95,7 @@ public class AuthServiceImpl implements AuthService{
         String refreshToken = jwtUtil.createRefreshToken(email);
         response.addHeader(JwtUtil.REFRESH_HEADER, refreshToken);
 
-        redisTokenService.addRefreshTokenByRedis(email, refreshToken, Duration.ofDays(1));   //redis에 refresh token 저장
+        redisTokenRepository.addRefreshTokenByRedis(email, refreshToken, Duration.ofDays(1));   //redis에 refresh token 저장
 
         member.updateLoginStatus(LoginStatus.DEFAULT);
         return new CommonResponse("로그인 완료");
@@ -102,7 +103,7 @@ public class AuthServiceImpl implements AuthService{
 
     //임시 비밀번호 발급
     @Override
-    @Transactional(readOnly = true)
+    @Transactional
     public String findPassword(String email) {
         isExistEmail(email);
         Member member = memberRepository.findByEmail(email).orElseThrow(NotFoundException.NotFoundMemberException::new);
@@ -114,15 +115,14 @@ public class AuthServiceImpl implements AuthService{
 
     //로그아웃
     @Override
-    @Transactional(readOnly = true)
     public CommonResponse logOut(HttpServletRequest request) {
         String accessToken = jwtUtil.resolveAccessToken(request);
         Claims claims = jwtUtil.getUserInfoFromToken(accessToken);
 
         Long expiration = jwtUtil.getExpiration(accessToken); //access token 남은 유효기간
-        redisTokenService.logoutAndWitdrawAccessTokenByRedis(accessToken, "logout", expiration, TimeUnit.MILLISECONDS);    //redis에 로그아웃 기록 저장
+        redisTokenRepository.logoutAndWitdrawAccessTokenByRedis(accessToken, "logout", expiration, TimeUnit.MILLISECONDS);    //redis에 로그아웃 기록 저장
 
-        redisTokenService.deleteRefreshTokenByRedis(claims.getSubject());    //refresh token 삭제
+        redisTokenRepository.deleteRefreshTokenByRedis(claims.getSubject());    //refresh token 삭제
 
         return new CommonResponse("로그아웃 완료");
     }
@@ -142,9 +142,9 @@ public class AuthServiceImpl implements AuthService{
         }
 
         Long expiration = jwtUtil.getExpiration(accessToken); //access token 남은 유효기간
-        redisTokenService.logoutAndWitdrawAccessTokenByRedis(accessToken, "withdraw", expiration, TimeUnit.MILLISECONDS);    //redis에 로그아웃 기록 저장
+        redisTokenRepository.logoutAndWitdrawAccessTokenByRedis(accessToken, "withdraw", expiration, TimeUnit.MILLISECONDS);    //redis에 로그아웃 기록 저장
 
-        redisTokenService.deleteRefreshTokenByRedis(claims.getSubject());    //refreshToken 삭제
+        redisTokenRepository.deleteRefreshTokenByRedis(claims.getSubject());    //refreshToken 삭제
 
         //member 삭제
         memberRepository.delete(member);

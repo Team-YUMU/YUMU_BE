@@ -5,6 +5,7 @@ import com.yumu.yumu_be.art.entity.Status;
 import com.yumu.yumu_be.auction.entity.Auction;
 import com.yumu.yumu_be.auction.repository.AuctionRepository;
 import com.yumu.yumu_be.bid.dto.HighestPriceResponse;
+import com.yumu.yumu_be.bid.repository.RedisBidRepository;
 import com.yumu.yumu_be.common.dto.CommonResponse;
 import com.yumu.yumu_be.exception.BadRequestException;
 import com.yumu.yumu_be.exception.NotFoundException;
@@ -27,7 +28,7 @@ import java.time.LocalDateTime;
 public class BidServiceImpl implements BidService {
 
     private final String PREFIX = "AUCTION:";
-    private final RedisBidService redisBidService;
+    private final RedisBidRepository redisBidRepository;
     private final AuctionRepository auctionRepository;
     private final MemberRepository memberRepository;
     private final PurchaseHistoryRepository purchaseHistoryRepository;
@@ -45,15 +46,15 @@ public class BidServiceImpl implements BidService {
         LocalDateTime expire = auction.getAuctionEndDate();     //키 삭제 기간을 경매 끝나는 시간으로 설정
 
         //현재 입찰가 존재 여부 확인 - 존재하지 않을 경우, 바로 저장
-        if (redisBidService.isExistBid(key)) {     //입찰이 존재할 경우, 가격 비교
-            Double recentPrice = redisBidService.getBidPrice(key, memberId);
+        if (redisBidRepository.isExistBid(key)) {     //입찰이 존재할 경우, 가격 비교
+            Double recentPrice = redisBidRepository.getBidPrice(key, memberId);
             if (Double.compare(price, recentPrice) <= 0) {              //입찰가보다 낮은 가격일 경우, exception
                 throw new BadRequestException.LowBidPriceException();
             }
-            redisBidService.deleteBid(key);     //입찰가보다 높을 경우, 이전 입찰가 삭제 후 저장
+            redisBidRepository.deleteBid(key);     //입찰가보다 높을 경우, 이전 입찰가 삭제 후 저장
         }
 
-        redisBidService.bid(key, memberId, price, expire);
+        redisBidRepository.bid(key, memberId, price, expire);
 
         //웹소켓으로 최고가 정보 보내기
         HighestPriceResponse response = new HighestPriceResponse(auctionId, bidder, price.longValue());
@@ -63,11 +64,12 @@ public class BidServiceImpl implements BidService {
     }
 
     @Override
+    @Transactional
     public CommonResponse successBid(int auctionId) {
         //art의 status와 auction의 낙찰자, 낙찰가 수정
         String key = serializeKey(auctionId);
-        Long successBidderId = redisBidService.getBidder(key);   //낙찰자의 id값
-        Double price = Math.ceil(redisBidService.getBidPrice(key, successBidderId) / 100) * 100;    //낙찰가 - 100단위에서 올림처리
+        Long successBidderId = redisBidRepository.getBidder(key);   //낙찰자의 id값
+        Double price = Math.ceil(redisBidRepository.getBidPrice(key, successBidderId) / 100) * 100;    //낙찰가 - 100단위에서 올림처리
         Long successPrice = price.longValue();
 
         Auction auction = auctionRepository.findById(auctionId).orElseThrow(NotFoundException.NotFoundAuctionException::new);
@@ -87,13 +89,14 @@ public class BidServiceImpl implements BidService {
     }
 
     @Override
+    @Transactional(readOnly = true)
     public HighestPriceResponse firstHighestPrice(int auctionId) {
         String key = serializeKey(auctionId);
-        if (!redisBidService.isExistBid(key)) {
+        if (!redisBidRepository.isExistBid(key)) {
             return null;
         }
-        Long bidderId = redisBidService.getBidder(key);
-        Long price = redisBidService.getBidPrice(key, bidderId).longValue();
+        Long bidderId = redisBidRepository.getBidder(key);
+        Long price = redisBidRepository.getBidPrice(key, bidderId).longValue();
         Member member = memberRepository.findById(bidderId).orElseThrow(NotFoundException.NotFoundMemberException::new);
         return new HighestPriceResponse(auctionId, member.getNickname(), price);
     }

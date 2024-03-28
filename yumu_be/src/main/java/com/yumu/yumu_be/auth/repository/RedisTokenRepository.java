@@ -1,16 +1,16 @@
-package com.yumu.yumu_be.auth.service;
+package com.yumu.yumu_be.auth.repository;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.data.redis.core.ValueOperations;
-import org.springframework.stereotype.Service;
+import org.springframework.stereotype.Repository;
 
 import java.time.Duration;
 import java.util.concurrent.TimeUnit;
 
-@Service
+@Repository
 @RequiredArgsConstructor
-public class RedisTokenService {
+public class RedisTokenRepository {
 
     private final StringRedisTemplate stringRedisTemplate;
 

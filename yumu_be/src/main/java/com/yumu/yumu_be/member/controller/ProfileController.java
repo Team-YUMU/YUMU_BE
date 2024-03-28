@@ -42,9 +42,21 @@ public class ProfileController {
     }
 
     //내 정보 이미지 수정
-    @PostMapping(value = "/member/profile-image", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    @PutMapping(value = "/member/profile-image", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<CommonResponse> updateMyProfileImage(@RequestParam(value = "profileImage") MultipartFile profileImage, @AuthenticationPrincipal UserDetailsImpl userDetails) throws IOException {
         return ResponseEntity.ok(profileService.updateMyProfileImage(profileImage, userDetails.getMember()));
+    }
+
+    //내 정보 이미지 삭제
+    @DeleteMapping("/member/profile-image")
+    public ResponseEntity<CommonResponse> deleteMyProfileImage(@AuthenticationPrincipal UserDetailsImpl userDetails) {
+        return ResponseEntity.ok(profileService.deleteMyProfileImage(userDetails.getMember().getId()));
+    }
+
+    //내 비밀번호 수정
+    @PutMapping("/member/password")
+    public ResponseEntity<CommonResponse> updateMyPassword(@RequestBody PasswordRequest request, @AuthenticationPrincipal UserDetailsImpl userDetails) {
+        return ResponseEntity.ok(profileService.updateMyPassword(request, userDetails.getMember().getId()));
     }
 
     //내 구매 내역 조회
