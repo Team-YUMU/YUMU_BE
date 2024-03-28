@@ -33,14 +33,14 @@ public class AuthController {
 
     //닉네임 중복 확인
     @GetMapping("/auth/signup/nickname-check")
-    public ResponseEntity<CommonResponse> checkNickname(@RequestBody NicknameCheckRequest request) {
-        return ResponseEntity.ok(authService.checkNickname(request.getNickname()));
+    public ResponseEntity<CommonResponse> checkNickname(@RequestParam(value = "nickname") String nickname) {
+        return ResponseEntity.ok(authService.checkNickname(nickname));
     }
 
     //이메일 중복 확인
     @GetMapping("/auth/signup/email-check")
-    public ResponseEntity<CommonResponse> checkEmail(@RequestBody EmailCheckRequest request) {
-        return ResponseEntity.ok(authService.checkEmail(request.getEmail()));
+    public ResponseEntity<CommonResponse> checkEmail(@RequestParam(value = "email") String email) {
+        return ResponseEntity.ok(authService.checkEmail(email));
     }
 
 
