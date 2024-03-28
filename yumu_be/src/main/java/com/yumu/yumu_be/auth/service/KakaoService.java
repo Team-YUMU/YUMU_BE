@@ -4,6 +4,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.yumu.yumu_be.auth.dto.KakaoInfoDto;
+import com.yumu.yumu_be.auth.repository.RedisTokenRepository;
 import com.yumu.yumu_be.common.dto.CommonResponse;
 import com.yumu.yumu_be.exception.NotFoundException;
 import com.yumu.yumu_be.jwt.JwtUtil;
@@ -41,7 +42,7 @@ public class KakaoService {
     private final MemberRepository memberRepository;
     private final PasswordEncoder passwordEncoder;
     private final JwtUtil jwtUtil;
-    private final RedisTokenService redisTokenService;
+    private final RedisTokenRepository redisTokenRepository;
 
     //카카오 로그인 로직
     @Transactional
@@ -56,7 +57,7 @@ public class KakaoService {
         String refreshToken = jwtUtil.createRefreshToken(kakaoMember.getEmail());
         response.addHeader(JwtUtil.REFRESH_HEADER, refreshToken);
 
-        redisTokenService.addRefreshTokenByRedis(kakaoMember.getEmail(), refreshToken, Duration.ofDays(1));
+        redisTokenRepository.addRefreshTokenByRedis(kakaoMember.getEmail(), refreshToken, Duration.ofDays(1));
 
         kakaoMember.updateLoginStatus(LoginStatus.KAKAO);
 

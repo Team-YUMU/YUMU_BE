@@ -1,15 +1,15 @@
-package com.yumu.yumu_be.bid.service;
+package com.yumu.yumu_be.bid.repository;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.redis.core.RedisTemplate;
-import org.springframework.stereotype.Service;
+import org.springframework.stereotype.Repository;
 
 import java.time.Instant;
 import java.time.LocalDateTime;
 
-@Service
+@Repository
 @RequiredArgsConstructor
-public class RedisBidService {
+public class RedisBidRepository {
     private final RedisTemplate<String, Long> bidRequestTemplate;
 
     public Boolean isExistBid(String key) {return bidRequestTemplate.hasKey(key); }
