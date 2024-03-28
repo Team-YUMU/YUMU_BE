@@ -70,7 +70,8 @@ public class AuthController {
 
     //카카오 로그인 및 회원가입
     @GetMapping("/kakao/callback")
-    public ResponseEntity<CommonResponse> kakaoLogin(@RequestParam String code, HttpServletResponse response) throws JsonProcessingException {
-        return ResponseEntity.ok(kakaoService.kakaoLogin(code, response));
+    public RedirectView kakaoLogin(@RequestParam String code, HttpServletResponse response) throws JsonProcessingException {
+        kakaoService.kakaoLogin(code, response);
+        return new RedirectView("http://localhost:3000/callback");
     }
 }
