@@ -13,7 +13,10 @@ import com.yumu.yumu_be.member.repository.MemberRepository;
 import io.jsonwebtoken.Claims;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.core.context.SecurityContext;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -121,7 +124,6 @@ public class AuthServiceImpl implements AuthService{
 
         Long expiration = jwtUtil.getExpiration(accessToken); //access token 남은 유효기간
         redisTokenRepository.logoutAndWitdrawAccessTokenByRedis(accessToken, "logout", expiration, TimeUnit.MILLISECONDS);    //redis에 로그아웃 기록 저장
-
         redisTokenRepository.deleteRefreshTokenByRedis(claims.getSubject());    //refresh token 삭제
 
         return new CommonResponse("로그아웃 완료");
@@ -143,11 +145,16 @@ public class AuthServiceImpl implements AuthService{
 
         Long expiration = jwtUtil.getExpiration(accessToken); //access token 남은 유효기간
         redisTokenRepository.logoutAndWitdrawAccessTokenByRedis(accessToken, "withdraw", expiration, TimeUnit.MILLISECONDS);    //redis에 로그아웃 기록 저장
-
         redisTokenRepository.deleteRefreshTokenByRedis(claims.getSubject());    //refreshToken 삭제
 
+        HttpSession session = request.getSession(false);    //session의 데이터 삭제
+        if (session != null) {
+            session.invalidate();
+        }
+        
         //member 삭제
         memberRepository.delete(member);
+        SecurityContextHolder.clearContext();
 
         return new CommonResponse("탈퇴 완료");
     }
