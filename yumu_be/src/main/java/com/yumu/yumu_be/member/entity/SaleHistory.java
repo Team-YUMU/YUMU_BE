@@ -1,6 +1,7 @@
 package com.yumu.yumu_be.member.entity;
 
 import com.yumu.yumu_be.art.entity.Status;
+import com.yumu.yumu_be.auction.entity.Auction;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
@@ -34,11 +35,12 @@ public class SaleHistory {
     @NotNull
     private LocalDateTime saleDate;
 
-    private int auctionId;
+    @NotNull
+    private int memberId;
 
     @ManyToOne(fetch = FetchType.LAZY , cascade = CascadeType.REMOVE)
-    @JoinColumn(name = "member_id")
-    private Member member;
+    @JoinColumn(name = "auction_id")
+    private Auction auction;
 
     public void updateStatus(Status status) {
         this.status = status;
