@@ -4,6 +4,6 @@ import lombok.Getter;
 
 @Getter
 public class PasswordRequest {
-    private String password;
     private String newPassword;
+    private String newCheckPassword;
 }

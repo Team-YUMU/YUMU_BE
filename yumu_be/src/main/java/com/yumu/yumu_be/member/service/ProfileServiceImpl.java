@@ -19,6 +19,7 @@ import org.springframework.data.domain.Slice;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.StringUtils;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
@@ -86,11 +87,19 @@ public class ProfileServiceImpl implements ProfileService {
     }
 
     @Override
+    @Transactional(readOnly = true)
+    public CommonResponse checkMyPassword(String password, Member member) {
+        if (!passwordEncoder.matches(password, member.getPassword())) {
+            throw new BadRequestException.NotMatchPasswordException();
+        }
+        return new CommonResponse("비밀번호 일치");
+    }
+
+    @Override
     @Transactional
     public CommonResponse updateMyPassword(PasswordRequest request, Long memberId) {
         Member myMember = isMember(memberId);
-        String nowPassword = myMember.getPassword();
-        if (!passwordEncoder.matches(request.getPassword(), nowPassword)) {
+        if (!request.getNewPassword().equals(request.getNewCheckPassword())) {
             throw new BadRequestException.NotMatchPasswordException();
         }
         myMember.updatePassword(passwordEncoder.encode(request.getNewPassword()));
